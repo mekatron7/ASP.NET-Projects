@@ -1,0 +1,96 @@
+﻿@model List<CarDealership.Data.Car>
+
+@{
+    ViewBag.Title = "Inventory";
+    var carMakes = Model.OrderByDescending(m => m.SalePrice).Select(c => c.Model.Make.MakeName).Distinct().ToList();
+}
+
+<h2 class="text-center">Inventory Report for @DateTime.Now.ToString("MMMM dd, yyyy")</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Make Name</th>
+            <th># of Cars in Inventory</th>
+            <th>Avg MSRP</th>
+            <th>Avg Sale Price</th>
+            <th>Oldest Vehicle in Inventory</th>
+            <th>Newest Vehice in Inventory</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in carMakes)
+        {
+            <tr class="invRow">
+                <td class="carName">@car</td>
+                <td>@Model.Count(c => c.Model.Make.MakeName == car)</td>
+                <td>@string.Format("{0:c}", Model.Where(c => c.Model.Make.MakeName == car).Average(m => m.MSRP))</td>
+                <td>@string.Format("{0:c}", Model.Where(c => c.Model.Make.MakeName == car).Average(m => m.SalePrice))</td>
+                <td>@Model.Where(c => c.Model.Make.MakeName == car).Min(m => m.CarYear)</td>
+                <td>@Model.Where(c => c.Model.Make.MakeName == car).Max(m => m.CarYear)</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+<br />
+
+<div id="searchResults">
+
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('.invRow').click(function (e) {
+                //Gather search params
+                var quickSearch = $(this).find('.carName').text();
+                var minPrice = 0;
+                var maxPrice = 0;
+                var minYear = 0;
+                var maxYear = 0;
+                var imagePath = '@Url.Content("~/Images/")'
+                var detailsPath = '@Url.Action("Details", "Inventory")?VIN='
+                var parameter = 'quickSearch=' + quickSearch + '&minPrice=' + minPrice + '&maxPrice=' + maxPrice + '&minYear=' + minYear + '&maxYear=' + maxYear + '&type=inv';
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:53474/cars/search?' + parameter,
+                    success: function (cars) {
+                        $('#searchResults').empty();
+                        $.each(cars, function (index, car) {
+                            var carResult = '<div class="row" style="padding-bottom:50px">' +
+                                '<div class="col-md-3">' +
+                                '<p><img src="' + imagePath + car.CarPicture + '" class="img-thumbnail text-center" style="width: 150px" /></p>' +
+                                car.CarYear + ' ' + car.MakeName + ' ' + car.ModelName + ' ' + car.ModelEdition +
+                                '</div>' +
+                                '<div class="col-md-3">' +
+                                '<p><strong>Body Style: </strong>' + car.BSName + '</p>' +
+                                '<p><strong>Transmission: </strong>' + car.TransmissionType + '</p>' +
+                                '<p><strong>Color/Type: </strong>' + car.ExtColorName + '/' + car.ExtColorType + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-3">' +
+                                '<p><strong>Interior Color/Material: </strong>' + car.IntColorName + '/' + car.IntColorType + '</p>' +
+                                '<p><strong>Mileage: </strong>' + car.Mileage + '</p>' +
+                                '<p><strong>VIN#: </strong>' + car.VIN + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-3">' +
+                                '<p><strong>Sale Price: </strong>' + car.SalePrice + '</p>' +
+                                '<p><strong>MSRP: </strong>' + car.MSRP + '</p>' +
+                                '<a class="btn btn-primary" href="' + detailsPath + car.VIN + '">Details</a>' +
+                                '<a class="btn btn-default" href="/Admin/EditVehicle?VIN=' + car.VIN + '">Edit</a>' +
+                                '</div>' +
+                                '</div>';
+
+                            $('#searchResults').append(carResult);
+                        })
+                    },
+                    error: function (message) {
+                        alert('An error occurred while performing the search');
+                    }
+                })
+            });
+        });
+    </script>
+
+}

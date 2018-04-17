@@ -1,0 +1,8 @@
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Data\bin\Debug\SWCFloorOrderingSystem.Data.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Data\bin\Debug\SWCFloorOrderingSystem.Data.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Data\bin\Debug\SWCFloorOrderingSystem.Models.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Data\bin\Debug\SWCFloorOrderingSystem.Models.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Data\obj\Debug\SWCFloorOrderingSystem.Data.csprojResolveAssemblyReference.cache
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Data\obj\Debug\SWCFloorOrderingSystem.Data.csproj.CoreCompileInputs.cache
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Data\obj\Debug\SWCFloorOrderingSystem.Data.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Data\obj\Debug\SWCFloorOrderingSystem.Data.pdb

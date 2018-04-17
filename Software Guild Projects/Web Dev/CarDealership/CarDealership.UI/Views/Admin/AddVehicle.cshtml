@@ -1,0 +1,195 @@
+﻿@model CarDealership.UI.Models.MyViewModels.AddEditVehicleVM
+
+@{
+    /**/
+
+    ViewBag.Title = "AddVehicle";
+}
+
+<h2 class="text-center">Add a New Vehicle</h2>
+
+@using (Html.BeginForm("AddVehicle", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    <h4 class="text-center">Fill in the vehicle information below.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedMake">Make: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedMake, Model.Makes, "- Select a Make -", new { @class = "form-control", id = "vehicleMakes" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedType">Type: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedType, Model.Types, "- Select a Type -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Year">Year: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Year, new { @class = "form-control", type = "number", value = DateTime.Now.Year.ToString() })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedColor">Color: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedColor, Model.Colors, "- Select a Color -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedColorType">Color Type: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedColorType, Model.ColorTypes, "- Select a Color Type -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Mileage">Mileage: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Mileage, new { @class = "form-control", type = "number" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="MSRP">MSRP: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.MSRP, new { @class = "form-control", type = "number" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedModel">Model: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedModel, Model.Models, "- Select a Model -", new { @class = "form-control", id = "vehicleModels" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedEdition">Edition: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedEdition, Model.Editions, "- Select an Edition -", new { @class = "form-control", id = "vehicleEditions" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedBodyStyle">Body Style: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedBodyStyle, Model.BodyStyles, "- Select a Body Style -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedTransmission">Transmission: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedTransmision, Model.Transmissions, "- Select a Transmission -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedIntColor">Interior Color: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedIntColor, Model.IntColors, "- Select an Interior Color -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SelectedIntColorType">Interior Color Type: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SelectedIntColorType, Model.IntColorTypes, "- Select an Interior Color Type -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="FormVIN">VIN#: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.FormVIN, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SalePrice">Sale Price: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.SalePrice, new { @class = "form-control", type = "number" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Description">Description: </label>
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", style = "height: 150px; width: 300px" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="ImageFile">Picture: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.ImageFile, new { type = "file", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancel", "Vehicles", "Admin", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </div>
+        </div>
+    </div> 
+}
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#vehicleMakes').change(function (e) {
+                //Populate models
+                var makeVal = $(this).find(':selected').val();
+                var makeTxt = $(this).find(':selected').text();
+                if (makeVal != null) {
+                    var parameter = 'make=' + makeTxt;
+                    $.ajax({
+                        type: 'GET',
+                        url: 'http://localhost:53474/cars/getmodels?' + parameter,
+                        success: function (models) {
+                            $('#vehicleModels').empty();
+                            $.each(models, function (index, model) {
+                                var listItem = '<option value="' + model.ModelName + '">' + model.ModelName + '</option>';
+                                $('#vehicleModels').append(listItem);
+                            })
+                            GetEditions();
+                        },
+                        error: function (message) {
+                            $('#vehicleModels').empty();
+                            $('#vehicleEditions').empty();
+                            alert('No model information is available for ' + makeTxt);
+                        }
+                    })
+                }
+            });
+
+            $('#vehicleModels').change(function (e) {
+                //Populate editions
+                GetEditions();
+            });
+
+            function GetEditions() {
+                var makeTxt = $('#vehicleMakes').find(':selected').text();
+                var modelVal = $('#vehicleModels').find(':selected').val();
+                var modelTxt = $('#vehicleModels').find(':selected').text();
+                if (modelVal != null) {
+                    var parameter = 'make=' + makeTxt + "&model=" + modelTxt
+                    $.ajax({
+                        type: 'GET',
+                        url: 'http://localhost:53474/cars/geteditions?' + parameter,
+                        success: function (editions) {
+                            $('#vehicleEditions').empty();
+                            $.each(editions, function (index, edition) {
+                                var listItem = '<option value="' + edition.ModelEdition + '">' + edition.ModelEdition + '</option>';
+                                $('#vehicleEditions').append(listItem);
+                            })
+                        },
+                        error: function (message) {
+                            alert('No edition information is available for the model ' + modelTxt);
+                            alert(message);
+                        }
+                    })
+                }
+            }
+        });
+    </script>
+    
+}
+
+

@@ -1,0 +1,125 @@
+﻿@model CarDealership.UI.Models.MyViewModels.PurchaseVM
+
+@{
+    ViewBag.Title = "Purchase Vehicle";
+}
+
+<h2 style="padding-bottom: 25px" class="text-center">@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        <p><img src="@Url.Content("~/Images/" + Model.Vehicle.CarPicture)" class="img-thumbnail text-center" style="width:150px; display:block; margin:auto" /></p>
+        <p class="text-center">@Model.Vehicle.CarYear @Model.Vehicle.Model.Make.MakeName @Model.Vehicle.Model.ModelName</p>
+    </div>
+    <div class="col-md-3">
+        <p><strong>Body Style: </strong>@Model.Vehicle.BodyStyle.BSName</p>
+        <p><strong>Transmission: </strong>@Model.Vehicle.Transmission.TransmissionType</p>
+        <p><strong>Color/Type: </strong>@Model.Vehicle.ExteriorColor.ExtColorName/@Model.Vehicle.ExteriorColor.ExtColorType</p>
+    </div>
+    <div class="col-md-3">
+        <p><strong>Interior Color/Material: </strong>@Model.Vehicle.InteriorColor.IntColorName/@Model.Vehicle.InteriorColor.IntColorType</p>
+        <p><strong>Mileage: </strong>@Model.Vehicle.Mileage</p>
+        <p><strong>VIN#: </strong>@Model.Vehicle.VIN_</p>
+    </div>
+    <div class="col-md-3">
+        <p><strong>Sale Price: </strong>@string.Format("{0:c}", Model.Vehicle.SalePrice)</p>
+        <p><strong>MSRP: </strong>@string.Format("{0:c}", Model.Vehicle.MSRP)</p>
+    </div>
+</div>
+<div class="col-md-9 row">Car Description: @Model.Vehicle.CarDescription</div>
+<hr />
+
+@using (Html.BeginForm("Purchase", "Sales", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <h4>Fill in the purchase information below.</h4>
+    <br />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.Vehicle.VIN_)
+    @Html.HiddenFor(m => m.Vehicle.CarType)
+    @Html.HiddenFor(m => m.Vehicle.Purchased)
+    @Html.HiddenFor(m => m.Vehicle.Featured)
+    @Html.HiddenFor(m => m.Vehicle.CarDescription)
+    @Html.HiddenFor(m => m.Vehicle.SalePrice)
+    @Html.HiddenFor(m => m.Vehicle.MSRP)
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="Name">Name: </label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="Email">Email: </label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="Street1">Street1: </label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Street1, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="City">City: </label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="Zip">Zipcode: </label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Zip, new { @class = "form-control", type = "number" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="Phone">Phone: </label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="Street2">Street2: </label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Street2, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="SelectedState">State: </label>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.SelectedState, Model.States, "- Select a State -", new { @class = "form-control", style = "width: 161px" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="PurchasePrice">Purchase Price: </label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.PurchasePrice, new { @class = "form-control", type = "number" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ActionLink("Cancel", "Index", "Sales", null, new { @class = "btn btn-default" })
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="SelectedPurchaseType">Purchase Type: </label>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.SelectedPurchaseType, Model.PurchaseTypes, "- Select a Purchase Type -", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

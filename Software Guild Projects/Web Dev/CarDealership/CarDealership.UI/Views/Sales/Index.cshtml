@@ -1,0 +1,100 @@
+﻿@model List<CarDealership.Data.Car>
+
+@{
+    ViewBag.Title = "Sales";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<br />
+
+<div class="container" style="padding-bottom:25px">
+    <div class="row">
+        <div class="col-md-4">
+            <p class="text-center"><label>Quick Search</label></p>
+            @Html.TextBox("quickSearch", null, new { @class = "form-control", placeholder = "Enter make, model, or year" })
+            <button id="search" class="btn btn-primary">Search</button>
+        </div>
+        <div class="col-md-4">
+            <p class="text-center"><label>Price</label></p>
+            <label class="col-md-2 control-label" for="minPrice">Min:</label>
+            <div class="col-md-4">
+                @Html.TextBox("minPrice", 0, new { @class = "form-control", type = "number", style = "width:100px" })
+            </div>
+            <label class="col-md-2 control-label" for="maxPrice">Max:</label>
+            <div class="col-md-4">
+                @Html.TextBox("maxPrice", 0, new { @class = "form-control", type = "number", style = "width:100px" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <p class="text-center"><label>Year</label></p>
+            <label class="col-md-2 control-label" for="minYear">Min:</label>
+            <div class="col-md-4">
+                @Html.TextBox("minYear", 0, new { @class = "form-control", type = "number", style = "width:100px" })
+            </div>
+            <label class="col-md-2 control-label" for="maxYear">Max:</label>
+            <div class="col-md-4">
+                @Html.TextBox("maxYear", 0, new { @class = "form-control", type = "number", style = "width:100px" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="searchResults">
+
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#search').click(function (e) {
+                //Gather search params
+                var quickSearch = $('#quickSearch').val();
+                var minPrice = $('#minPrice').val();
+                var maxPrice = $('#maxPrice').val();
+                var minYear = $('#minYear').val();
+                var maxYear = $('#maxYear').val();
+                var imagePath = '@Url.Content("~/Images/")'
+                var detailsPath = '@Url.Action("Details", "Inventory")?VIN='
+                var parameter = 'quickSearch=' + quickSearch + '&minPrice=' + minPrice + '&maxPrice=' + maxPrice + '&minYear=' + minYear + '&maxYear=' + maxYear + '&type=sales';
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:53474/cars/search?' + parameter,
+                    success: function (cars) {
+                        $('#searchResults').empty();
+                        $.each(cars, function (index, car) {
+                            var carResult = '<div class="row" style="padding-bottom:50px">' +
+                                '<div class="col-md-3">' +
+                                '<p><img src="' + imagePath + car.CarPicture + '" class="img-thumbnail text-center" style="width: 150px; display:block; margin:auto" /></p>' +
+                                '<p class="text-center">' + car.CarYear + ' ' + car.MakeName + ' ' + car.ModelName + ' ' + car.ModelEdition + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-3">' +
+                                '<p><strong>Body Style: </strong>' + car.BSName + '</p>' +
+                                '<p><strong>Transmission: </strong>' + car.TransmissionType + '</p>' +
+                                '<p><strong>Color/Type: </strong>' + car.ExtColorName + '/' + car.ExtColorType + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-3">' +
+                                '<p><strong>Interior Color/Material: </strong>' + car.BSName + '/' + car.IntColorType + '</p>' +
+                                '<p><strong>Mileage: </strong>' + car.Mileage + '</p>' +
+                                '<p><strong>VIN#: </strong>' + car.VIN + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-3">' +
+                                '<p><strong>Sale Price: </strong>' + car.SalePrice + '</p>' +
+                                '<p><strong>MSRP: </strong>' + car.MSRP + '</p>' +
+                                '<a class="btn btn-primary" href="' + detailsPath + car.VIN + '">Details</a>' +
+                                '<a class="btn btn-success" href="/Sales/Purchase?VIN=' + car.VIN + '">Purchase Vehicle</a>' +
+                                '</div>' +
+                                '</div>';
+
+                            $('#searchResults').append(carResult);
+                        })
+                    },
+                    error: function (message) {
+                        alert('An error occurred while performing the search');
+                    }
+                })
+            });
+        });
+    </script>
+
+}

@@ -1,0 +1,2 @@
+Order Number,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+0,Michael Scott,PA,6.75,Laminate,525,1.75,2.10,918.75,1102.50,136.434375,2157.684375

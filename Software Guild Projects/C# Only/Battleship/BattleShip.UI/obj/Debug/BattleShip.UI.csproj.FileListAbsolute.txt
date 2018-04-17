@@ -1,0 +1,9 @@
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Battleship\BattleShip.UI\bin\Debug\BattleShip.UI.exe.config
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Battleship\BattleShip.UI\bin\Debug\BattleShip.UI.exe
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Battleship\BattleShip.UI\bin\Debug\BattleShip.UI.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Battleship\BattleShip.UI\bin\Debug\BattleShip.BLL.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Battleship\BattleShip.UI\bin\Debug\BattleShip.BLL.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Battleship\BattleShip.UI\obj\Debug\BattleShip.UI.csprojResolveAssemblyReference.cache
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Battleship\BattleShip.UI\obj\Debug\BattleShip.UI.csproj.CoreCompileInputs.cache
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Battleship\BattleShip.UI\obj\Debug\BattleShip.UI.exe
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Battleship\BattleShip.UI\obj\Debug\BattleShip.UI.pdb

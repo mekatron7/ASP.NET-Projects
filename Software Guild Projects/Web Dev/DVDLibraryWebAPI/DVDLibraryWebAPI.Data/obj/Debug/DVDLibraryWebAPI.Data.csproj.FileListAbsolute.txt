@@ -1,0 +1,11 @@
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\obj\Debug\DVDLibraryWebAPI.Data.csprojResolveAssemblyReference.cache
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\obj\Debug\DVDLibraryWebAPI.Data.csproj.CoreCompileInputs.cache
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\bin\Debug\DVDLibraryWebAPI.Data.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\bin\Debug\DVDLibraryWebAPI.Data.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\bin\Debug\Dapper.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\bin\Debug\DVDLibraryWebAPI.Models.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\bin\Debug\DVDLibraryWebAPI.Models.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\bin\Debug\Dapper.xml
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\obj\Debug\DVDLibraryWebAPI.Data.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\obj\Debug\DVDLibraryWebAPI.Data.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Data\bin\Debug\DVDLibraryWebAPI.Models.dll.config

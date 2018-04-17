@@ -1,0 +1,2 @@
+Order Number,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+0,Dwight Schrute,PA,6.75,Wood,365,5.15,4.75,1879.75,1733.75,243.911250,3857.411250

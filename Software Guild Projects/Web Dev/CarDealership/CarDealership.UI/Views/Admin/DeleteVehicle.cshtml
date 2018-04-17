@@ -1,0 +1,50 @@
+﻿@model CarDealership.Data.Car
+
+@{
+    ViewBag.Title = "DeleteVehicle";
+}
+
+<h2 class="text-center">Delete Vehicle</h2>
+
+<div>
+    <div class="col-md-3">
+        <p><img src="@Url.Content("~/Images/" + Model.CarPicture)" class="img-thumbnail text-center" style="width: 200px; display:block; margin:auto" /></p>
+        <p class="text-center">@Model.CarYear @Model.Model.Make.MakeName @Model.Model.ModelName @Model.Model.ModelEdition</p>
+        @if (Model.Purchased == "Y")
+        {
+            <p class="alert-danger text-center">Unavailable/Sold</p>
+        }
+    </div>
+    <div class="col-md-3">
+        <p><strong>Body Style: </strong>@Model.BodyStyle.BSName</p>
+        <p><strong>Transmission: </strong>@Model.Transmission.TransmissionType</p>
+        <p><strong>Color/Type: </strong>@Model.ExteriorColor.ExtColorName/@Model.ExteriorColor.ExtColorType</p>
+    </div>
+    <div class="col-md-3">
+        <p><strong>Interior Color/Material: </strong>@Model.BodyStyle.BSName/@Model.InteriorColor.IntColorType</p>
+        <p><strong>Mileage: </strong>@Model.Mileage</p>
+        <p><strong>VIN#: </strong>@Model.VIN_</p>
+    </div>
+    <div class="col-md-3">
+        <p><strong>Sale Price: </strong>@string.Format("{0:c}", Model.SalePrice)</p>
+        <p><strong>MSRP: </strong>@string.Format("{0:c}", Model.MSRP)</p>
+    </div>
+</div>
+<div class="col-md-9 row">Car Description: @Model.CarDescription</div>
+
+<div class="row">
+
+</div>
+<hr />
+
+
+@using (Html.BeginForm("DeleteVehicle", "Admin", FormMethod.Post))
+{
+    <p>Are you sure you want to delete this car?</p>
+
+    @Html.HiddenFor(m => m.VIN_)
+
+    @Html.ActionLink("Cancel", "Vehicles", "Admin", null, new { @class = "btn btn-default" })
+    <button type="submit" class="btn btn-danger">Delete</button>
+}
+

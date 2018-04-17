@@ -1,0 +1,7 @@
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Powerball\Powerball\bin\Debug\Powerball.exe.config
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Powerball\Powerball\bin\Debug\Powerball.exe
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Powerball\Powerball\bin\Debug\Powerball.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Powerball\Powerball\obj\Debug\Powerball.csproj.CoreCompileInputs.cache
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Powerball\Powerball\obj\Debug\Powerball.exe
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Powerball\Powerball\obj\Debug\Powerball.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\Powerball\Powerball\obj\Debug\Powerball.csprojResolveAssemblyReference.cache

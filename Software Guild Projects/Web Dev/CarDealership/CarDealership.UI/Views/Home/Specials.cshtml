@@ -1,0 +1,27 @@
+﻿
+@model List<CarDealership.Data.Special>
+
+@{
+    ViewBag.Title = "Specials";
+}
+<h2 class="text-center">@ViewBag.Title</h2>
+<h3 class="text-center">@ViewBag.Message</h3>
+<br />
+
+@foreach (var special in Model)
+{
+    <div class="row">
+        <div class="col-md-1">
+            <p style="font-size:40px" class="text-center">$</p>
+        </div>
+        <div class="col-md-11">
+            <p style="font-style:italic"><strong>@special.SpecialName</strong></p>
+            <p>@special.SpecialDescription</p>
+            <p class="text-right" style="font-style:italic">Valid from: @special.SpecialStartDate.ToShortDateString() - @special.SpecialEndDate.ToShortDateString()</p>
+        </div>
+        <br />
+    </div>
+    <hr />
+}
+@Html.ActionLink("Click here to go back to the main page", "Index", "Home")
+

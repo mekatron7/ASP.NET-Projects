@@ -1,0 +1,2 @@
+Order Number,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+0,Tyler the Creator,OH,6.25,Carpet,700,2.25,2.10,1575.00,1470.00,190.312500,3235.312500

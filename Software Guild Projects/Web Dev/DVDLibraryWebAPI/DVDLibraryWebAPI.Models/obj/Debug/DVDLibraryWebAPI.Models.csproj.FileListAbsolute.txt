@@ -1,0 +1,7 @@
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Models\bin\Debug\DVDLibraryWebAPI.Models.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Models\bin\Debug\DVDLibraryWebAPI.Models.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Models\obj\Debug\DVDLibraryWebAPI.Models.csproj.CoreCompileInputs.cache
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Models\obj\Debug\DVDLibraryWebAPI.Models.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Models\obj\Debug\DVDLibraryWebAPI.Models.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Models\bin\Debug\DVDLibraryWebAPI.Models.dll.config
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\Web Development\DVDLibraryWebAPI\DVDLibraryWebAPI.Models\obj\Debug\DVDLibraryWebAPI.Models.csprojResolveAssemblyReference.cache

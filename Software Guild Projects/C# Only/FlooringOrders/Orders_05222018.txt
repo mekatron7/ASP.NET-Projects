@@ -1,0 +1,2 @@
+Order Number,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+0,Harry Pohttuh,MI,5.75,Wood,450,5.15,4.75,2317.50,2137.50,256.162500,4711.162500

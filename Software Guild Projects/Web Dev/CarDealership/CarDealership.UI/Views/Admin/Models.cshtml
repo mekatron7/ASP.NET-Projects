@@ -1,0 +1,39 @@
+﻿@model CarDealership.UI.Models.MyViewModels.AddModelVM
+
+@{
+    ViewBag.Title = "Models";
+}
+
+<h2>Add a New Model</h2>
+
+@using (Html.BeginForm("Models", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <h4>Fill in the car model information below.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="SelectedMake">Make Name: </label>
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.SelectedMake, Model.Makes, "- Select a Make -", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="ModelName">Model Name: </label>
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.ModelName, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="ModelEdition">Model Edition: </label>
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.ModelEdition, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            @Html.ActionLink("Cancel", "Models", "Admin", null, new { @class = "btn btn-default" })
+            <input type="submit" class="btn btn-primary" value="Submit" />
+        </div>
+    </div>
+}
+

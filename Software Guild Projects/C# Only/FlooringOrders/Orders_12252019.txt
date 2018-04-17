@@ -1,0 +1,2 @@
+Order Number,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+0,North Pole Inc,MN,6.875,Wood,1400,5.15,4.75,7210.00,6650.00,952.8750000,14812.8750000

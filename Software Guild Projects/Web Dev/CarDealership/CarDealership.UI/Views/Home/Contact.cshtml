@@ -1,0 +1,70 @@
+﻿@model CarDealership.UI.Models.MyViewModels.ContactVM
+
+@{
+    ViewBag.Title = "Contact Us";
+}
+<h2>@ViewBag.Title</h2>
+<h3>@ViewBag.Message</h3>
+<h4>Fill in the information below to inquire about any cars in our inventory.</h4>
+<hr />
+
+<div class="col-md-6">
+    @using (Html.BeginForm("Contact", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="ContactName">Name: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.ContactName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="ContactEmail">Email: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.ContactEmail, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="ContactPhone">Phone: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.ContactPhone, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="VIN">VIN#: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.VIN, new { @class = "form-control", value = Model.VIN })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="ContactMessage">Message: </label>
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.ContactMessage, new { @class = "form-control", style = "height: 150px" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-primary" value="Submit" />
+            </div>
+        </div>
+    }
+</div>
+<div class="col-md-6">
+    <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=4120%20Library%20Ln&key=AIzaSyBFyZ0rlk7JxsbVc7_133XT005t3fLM-JE" allowfullscreen></iframe>
+
+    <address>
+        Skrt Automotive<br />
+        4120 Library Ln<br />
+        St Louis Park, MN 55414-6399<br />
+        <abbr title="Phone">P:</abbr>
+        612.555.0100
+    </address>
+
+    <address>
+        <strong>Support:</strong>   <a href="mailto:skrtsupport@skrt.com">skrtsupport@skrt.com</a><br />
+        <strong>Marketing:</strong> <a href="mailto:skrtmarketing@skrt.com">skrtmarketing@skrt.com</a>
+    </address>
+</div>
+
+

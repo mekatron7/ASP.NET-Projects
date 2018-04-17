@@ -1,0 +1,17 @@
+﻿@model Exercises.Models.Data.State
+
+@{
+    ViewBag.Title = "DeleteState";
+}
+
+<h2>DeleteState</h2>
+
+<p>Are you sure you want to delete the state @Model.StateName?</p>
+
+@using (Html.BeginForm("DeleteState", "Admin", FormMethod.Post))
+{
+    @Html.HiddenFor(s => s.StateAbbreviation)
+
+    <button type="submit" class="btn btn-danger">Delete</button>
+    @Html.ActionLink("Cancel", "States", "Admin", null, new { @class = "btn btn-primary" })
+}

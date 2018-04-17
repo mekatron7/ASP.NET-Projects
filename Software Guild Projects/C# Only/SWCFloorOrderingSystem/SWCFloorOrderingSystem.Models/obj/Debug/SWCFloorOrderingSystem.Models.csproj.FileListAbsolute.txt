@@ -1,0 +1,5 @@
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Models\bin\Debug\SWCFloorOrderingSystem.Models.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Models\bin\Debug\SWCFloorOrderingSystem.Models.pdb
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Models\obj\Debug\SWCFloorOrderingSystem.Models.csproj.CoreCompileInputs.cache
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Models\obj\Debug\SWCFloorOrderingSystem.Models.dll
+C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem.Models\obj\Debug\SWCFloorOrderingSystem.Models.pdb

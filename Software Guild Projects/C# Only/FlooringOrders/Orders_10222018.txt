@@ -1,0 +1,2 @@
+Order Number,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+0,Chris Chrisserton,MN,6.875,Laminate,140,1.75,2.10,245.00,294.00,37.0562500,576.0562500

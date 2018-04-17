@@ -1,0 +1,2 @@
+Order Number,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+0,Marisa,MN,6.875,Wood,500,5.15,4.75,2575.00,2375.00,340.3125000,5290.3125000

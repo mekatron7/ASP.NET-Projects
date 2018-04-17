@@ -1,0 +1,2 @@
+Order Number,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+0,Dickerman Dasherton,OH,6.25,Tile,463729182,3.50,4.15,1623052137.00,1924476105.30,221720515.143750,3769248757.443750

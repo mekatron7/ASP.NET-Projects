@@ -1,0 +1,22 @@
+﻿@model Exercises.Models.Data.State
+
+@{
+                /**/
+
+                ViewBag.Title = "AddState";
+}
+
+<h2>AddState</h2>
+
+@using (Html.BeginForm("AddState", "Admin", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.LabelFor(s => s.StateAbbreviation)
+        @Html.TextBoxFor(s => s.StateAbbreviation, new { @class = "form-control", placeholder = "State Abbreviation" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(s => s.StateName)
+        @Html.TextBoxFor(s => s.StateName, new { @class = "form-control", placeholder = "State Name" })
+    </div>
+    <button type="submit" class="btn btn-primary">Add State</button>
+}
