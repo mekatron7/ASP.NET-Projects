@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>A Regular Vending Machine</title>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">A Regular Vending Machine</h1>
+        <hr>
+        <div class="row">
+            <div id="itemSection" class="col-md-8" style="background-color:aliceblue">
+                <div class="row">
+                    <div id="vendingItems" style="background-color:aquamarine">
+                        <!-- Vending items go in here -->
+                    </div>
+                </div>
+            </div>
+            <div id="vendingInterface" class="col-md-4 text-center" style="background-color:skyblue">
+                <h3>Total $ In</h3>
+                <input type="text" id="moneyIn" class="text-center" style="margin-bottom:8px" placeholder="Insert $$" readonly/>
+                <div style="margin-bottom:8px">
+                    <button type="button" id="addDollar" class="btn btn-default">
+                        Add Dollar
+                    </button>
+                    <button type="button" id="addQuarter" class="btn btn-default">
+                        Add Quarter
+                    </button>
+                </div>
+                <div style="margin-bottom:8px">
+                    <button type="button" id="addDime" class="btn btn-default">
+                        Add Dime
+                    </button>
+                    <button type="button" id="addNickel" class="btn btn-default">
+                        Add Nickel
+                    </button>
+                </div>
+                <hr>
+                <h3>Messages</h3>
+                <input type="text" id="messageBox" class="text-center" style="margin-bottom:8px" readonly/>
+                <div style="margin-bottom:8px">
+                        <label>Item: </label>
+                        <input type="text" id="itemIDBox" class="text-center" readonly/>
+                </div>
+                <div>
+                    <button type="button" id="makePurchase" class="btn btn-default">
+                        Make Purchase
+                    </button>
+                </div>
+                <hr>
+                <h3>Change</h3>
+                <input type="text" id="changeBox" class="text-center" style="margin-bottom:8px" readonly/>
+                <div style="margin-bottom:24px">
+                    <button type="button" id="changeReturn" class="btn btn-default" style="margin-bottom:65px">
+                        Change Return
+                    </button>
+                    <br>
+                    <button type="button" id="shakeMachine" class="btn btn-default" style="background-color:red; display:none">
+                        Shake Vending Machine
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/home.js"></script>
+</body>
+
+</html>
