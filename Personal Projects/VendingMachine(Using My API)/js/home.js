@@ -6,6 +6,7 @@ $(document).ready(function () {
     var nickels = 0;
     var currentItem = '';
     var highlightedItem = null;
+    var itemsLoaded;
 
     function loadItems() {
         $.ajax({
@@ -14,6 +15,7 @@ $(document).ready(function () {
             success: function (itemsArray) {
                 var itemsDiv = $('#vendingItems');
                 itemsDiv.empty();
+                itemsLoaded = true;
 
                 $.each(itemsArray, function (index, item) {
                     var itemInfo = '';
@@ -30,6 +32,7 @@ $(document).ready(function () {
             },
             error: function () {
                 alert("The vending delivery guy hasn't restocked the machine yet.");
+                itemsLoaded = false;
             }
         });
     };
@@ -66,7 +69,12 @@ $(document).ready(function () {
             vendItem();
         }
         else {
-            $('#messageBox').val('Please make a selection');
+            if (itemsLoaded) {
+                $('#messageBox').val('Please make a selection');
+            } else {
+                $('#messageBox').val('NO ITEMS');
+                alert("Sorry, the vending service is currently down. Contact customer service at 1-800-AVENDER");
+            }
         }
     });
 
@@ -79,17 +87,26 @@ $(document).ready(function () {
 
                 var changeReturned = '';
 
-                    if (itemToGet.quarters != 0) {
-                        changeReturned += "Q's:" + itemToGet.quarters + ' ';
-                    }
-                    if (itemToGet.dimes != 0) {
-                        changeReturned += "D's:" + itemToGet.dimes + ' ';
-                    }
-                    if (itemToGet.nickels != 0) {
-                        changeReturned += "N's:" + itemToGet.nickels + ' ';
-                    }
+                if (itemToGet.quarters != 0) {
+                    changeReturned += "Q's:" + itemToGet.quarters + ' ';
+                }
+                if (itemToGet.dimes != 0) {
+                    changeReturned += "D's:" + itemToGet.dimes + ' ';
+                }
+                if (itemToGet.nickels != 0) {
+                    changeReturned += "N's:" + itemToGet.nickels + ' ';
+                }
 
-                    $('#changeBox').val(changeReturned);
+                currentItem = '';
+                amountInserted = 0;
+                dollars = 0;
+                quarters = 0;
+                dimes = 0;
+                nickels = 0;
+                highlightedItem = null;
+                $('#moneyIn').val('$' + 0);
+                $('#itemIDBox').val('');
+                $('#changeBox').val(changeReturned);
 
                 if (itemToGet.stuck == 'Y') {
                     $('#messageBox').val('ITEM STUCK');
@@ -97,16 +114,10 @@ $(document).ready(function () {
                 }
                 else {
                     $('#messageBox').val('Thank you!!!');
-                    
-                    currentItem = '';
-                    amountInserted = 0;
-                    dollars = 0;
-                    quarters = 0;
-                    dimes = 0;
-                    nickels = 0;
-                    highlightedItem = null;
-                    $('#moneyIn').val('$' + 0);
-                    $('#itemIDBox').val('');
+                }
+
+                if (itemToGet.stuck != 'Y' && itemToGet.stuck != 'N') {
+                    alert(itemToGet.stuck);
                 }
             },
             error: function (response) {
@@ -118,8 +129,8 @@ $(document).ready(function () {
     function shakeSuccess() {
         $.ajax({
             type: 'GET',
-            url: 'http://localhost:55524/shakesuccess/' + $('#itemIDBox').val(),
-            success: function(response){
+            url: 'http://localhost:55524/shakesuccess',
+            success: function (response) {
                 loadItems();
                 alert(response)
             },
@@ -153,7 +164,7 @@ $(document).ready(function () {
             $('#changeBox').val("There's no change to return");
         }
         else {
-            $('#changeBox').val('Change returned: ' + changeReturned);
+            $('#changeBox').val(changeReturned);
         }
 
         $('#moneyIn').val('$' + 0);
@@ -184,8 +195,8 @@ $(document).ready(function () {
         } else {
             if (currentItem == 'Snickers') {
                 alert("Snickers satisfies, but you however won't be satisfied because you shook the machine too hard and it fell on top of you killing you instantly.");
-            } else if (currentItem == 'Pringles') {
-                alert('Before you could pop, the fun stopped when you shook the machine too hard and it fell on top of you killing you instantly.');
+            } else if (currentItem == 'Take 5') {
+                alert('You tried to take 5, but the machine took your life when it fell on top of you kiling you instantly.');
             } else if (currentItem == 'Doritos') {
                 alert('¡Ay caramba! You shook the machine too hard esse. It fell on top of you killing you instantly.');
             } else {

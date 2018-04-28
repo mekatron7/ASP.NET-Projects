@@ -13,6 +13,8 @@ namespace MyVendingMachineAPI.Controllers
     public class VendingController : ApiController
     {
         private Random rnd = new Random();
+        private static Item chosenItem;
+        private static List<int> stuckItems = new List<int>();
 
         private static List<Item> items = new List<Item>
         {
@@ -24,7 +26,7 @@ namespace MyVendingMachineAPI.Controllers
             new Item(){ Id = 6, Name = "Starburst", Price = 1.25m, Quantity = 4 },
             new Item(){ Id = 7, Name = "Gobstoppers", Price = 1.25m, Quantity = 1 },
             new Item(){ Id = 8, Name = "Welch's Fruit Snacks", Price = 1.50m, Quantity = 7 },
-            new Item(){ Id = 9, Name = "Doritos", Price = 1.25m, Quantity = 2 },
+            new Item(){ Id = 9, Name = "Doritos", Price = 1.25m, Quantity = 4 },
             new Item(){ Id = 10, Name = "Lay's Original", Price = 1.25m, Quantity = 5 },
             new Item(){ Id = 11, Name = "Hot Fries", Price = 1.00m, Quantity = 8 },
             new Item(){ Id = 12, Name = "Sydney's of Hangover", Price = 1.55m, Quantity = 10 },
@@ -41,7 +43,7 @@ namespace MyVendingMachineAPI.Controllers
         [AcceptVerbs("GET")]
         public IHttpActionResult VendItem(decimal amount, int id)
         {
-            Item chosenItem = items.SingleOrDefault(i => i.Id == id);
+            chosenItem = items.SingleOrDefault(i => i.Id == id);
 
             if(chosenItem.Quantity == 0)
             {
@@ -71,21 +73,45 @@ namespace MyVendingMachineAPI.Controllers
                     if (rnd.Next(10) < 3)
                     {
                         coins.Stuck = "Y";
+                        stuckItems.Add(chosenItem.Id);
                         return Ok(coins);
                     }
 
-                    chosenItem.Quantity--;
+                    if (stuckItems.Contains(chosenItem.Id))
+                    {
+                        if(chosenItem.Quantity > 1)
+                        {
+                            coins.Stuck = $"Two {chosenItem.Name} ended up falling down. Lucky you.";
+                            if(chosenItem.Quantity > 2)
+                            {
+                                stuckItems.Remove(chosenItem.Id);
+                            }
+                            else
+                            {
+                                stuckItems.RemoveAll(i => i == chosenItem.Id);
+                            }
+                            chosenItem.Quantity = chosenItem.Quantity - 2;
+                        }
+                        else
+                        {
+                            chosenItem.Quantity--;
+                            stuckItems.RemoveAll(i => i == chosenItem.Id);
+                        }
+                    }
+                    else
+                    {
+                        chosenItem.Quantity--;
+                    }
 
                     return Ok(coins);
                 }
             }
         }
 
-        [Route("shakesuccess/{id}")]
+        [Route("shakesuccess")]
         [AcceptVerbs("GET")]
-        public IHttpActionResult ShakeSuccess(int id)
+        public IHttpActionResult ShakeSuccess()
         {
-            Item chosenItem = items.SingleOrDefault(i => i.Id == id);
             if(chosenItem.Quantity == 0)
             {
                 return BadRequest("You get nothing. Good day sir.");
@@ -93,6 +119,7 @@ namespace MyVendingMachineAPI.Controllers
             else
             {
                 chosenItem.Quantity--;
+                stuckItems.Remove(chosenItem.Id);
                 return Ok($"Lucky for you, the {chosenItem.Name} fell down! You took it and ate that shit like a real G.");
             }
         }
