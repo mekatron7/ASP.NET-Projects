@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete Data</h2>
+
+@using (Html.BeginForm("Delete", "Home", FormMethod.Post))
+{
+    <p>Are you sure you want to delete all data in the database?</p>
+
+    @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-default" })
+    <button type="submit" class="btn btn-danger">Delete</button>
+}
+

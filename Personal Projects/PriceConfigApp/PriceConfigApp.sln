@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceConfigApp", "PriceConfigApp\PriceConfigApp.csproj", "{A20B2370-A5D1-455D-9901-52C61C59A84D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A20B2370-A5D1-455D-9901-52C61C59A84D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A20B2370-A5D1-455D-9901-52C61C59A84D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A20B2370-A5D1-455D-9901-52C61C59A84D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A20B2370-A5D1-455D-9901-52C61C59A84D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8EA0F851-D9AC-400C-ADDE-9DB7B642CA8C}
+	EndGlobalSection
+EndGlobal

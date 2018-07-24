@@ -24,7 +24,7 @@ namespace MyVendingMachineAPI.Controllers
             new Item(){ Id = 4, Name = "Twix", Price = 1.25m, Quantity = 9 },
             new Item(){ Id = 5, Name = "Skittles", Price = 1.25m, Quantity = 15 },
             new Item(){ Id = 6, Name = "Starburst", Price = 1.25m, Quantity = 4 },
-            new Item(){ Id = 7, Name = "Gobstoppers", Price = 1.25m, Quantity = 1 },
+            new Item(){ Id = 7, Name = "Gobstoppers", Price = 1.25m, Quantity = 2 },
             new Item(){ Id = 8, Name = "Welch's Fruit Snacks", Price = 1.50m, Quantity = 7 },
             new Item(){ Id = 9, Name = "Doritos", Price = 1.25m, Quantity = 4 },
             new Item(){ Id = 10, Name = "Lay's Original", Price = 1.25m, Quantity = 5 },
