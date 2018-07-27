@@ -14,6 +14,7 @@ namespace PriceConfigApp.Controllers
     public class HomeController : Controller
     {
         string _connString = ConfigurationManager.ConnectionStrings["PriceConfig"].ConnectionString;
+        static List<PriceItem> Prices = new List<PriceItem>();
 
         // GET: Home
         public ActionResult Index()
@@ -23,13 +24,17 @@ namespace PriceConfigApp.Controllers
 
             using (var cn = new SqlConnection(_connString))
             {
-                int rows = cn.QueryFirst<int>("select count(*) from Prices", commandType: System.Data.CommandType.Text);
-                model.Uploaded = (rows > 0) ? true : false;
-
-                if (model.Uploaded)
+                try
                 {
-                    model.Prices = cn.Query<PriceItem>("select * from Prices", commandType: System.Data.CommandType.Text).ToList();
+                    Prices = cn.Query<PriceItem>("select * from Prices", commandType: System.Data.CommandType.Text).ToList();
+                    model.Uploaded = (Prices.Count > 0) ? true : false;
+                    model.Prices = Prices;
                 }
+                catch(Exception ex)
+                {
+                    model.ErrorMessage = $"{ex.Source}: {ex.Message}";
+                }
+                
             }
 
             return View(model);
@@ -38,6 +43,8 @@ namespace PriceConfigApp.Controllers
         [HttpPost]
         public ActionResult Index(PriceConfigVM model)
         {
+            model.Prices = Prices;
+
             if (ModelState.IsValid)
             {
                 if (model.Mode == "csv")
@@ -55,9 +62,6 @@ namespace PriceConfigApp.Controllers
                         return View(model);
                     }
 
-                    //Delete data in database if there's already existing data
-                    if (model.Uploaded) DeleteData();
-
                     //Parse CSV and upload to database
                     //Parsing section
                     FileInfo csv = new FileInfo(model.CSVFile.FileName);
@@ -69,12 +73,33 @@ namespace PriceConfigApp.Controllers
                     while ((line = reader.ReadLine()) != null)
                     {
                         string[] row = line.Split(',');
+                        if(row.Length == 1)
+                        {
+                            query = "insert into Prices values('bad', 'data')";
+                            break;
+                        }
+
                         query += $"insert into Prices values('{row[0]}', {row[1]}) ";
                     }
 
+                    //Upload section
                     using (var cn = new SqlConnection(_connString))
                     {
-                        cn.Execute(query, commandType: System.Data.CommandType.Text);
+                        try
+                        {
+                            //Delete data in database if there's already existing data
+                            if (model.Uploaded) DeleteData();
+
+                            cn.Execute(query, commandType: System.Data.CommandType.Text);
+                        }
+                        catch(Exception ex)
+                        {
+                            if(ex.Message.Contains("syntax")) ModelState.AddModelError("", "The csv file could not be uploaded due to invalid data.");
+
+                            model.ErrorMessage = $"{ex.Source}: {ex.Message}";
+
+                            return View(model);
+                        }
                     }
                 }
                 else
@@ -110,6 +135,7 @@ namespace PriceConfigApp.Controllers
 
         public void DeleteData()
         {
+            Prices.Clear();
             using (var cn = new SqlConnection(_connString))
             {
                 cn.Execute("delete from Prices", commandType: System.Data.CommandType.Text);

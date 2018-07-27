@@ -18,5 +18,7 @@ namespace PriceConfigApp.Models
         public List<PriceItem> Prices { get; set; }
 
         public string Mode { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }

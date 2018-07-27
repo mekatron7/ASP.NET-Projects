@@ -5,87 +5,110 @@
 }
 
 <h2 class="text-center">Price Config App</h2>
+<h3 class="text-center">A CSV file must be uploaded before price modification can occur.</h3>
+<hr />
 
-@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+@if (!string.IsNullOrEmpty(Model.ErrorMessage) && !Model.ErrorMessage.Contains("syntax"))
 {
-    //@Html.HiddenFor(m => m.Mode, new { value = "csv" })
-    @Html.HiddenFor(m => m.Uploaded)
-    <input type="hidden" name="Mode" value="csv" />
-    <h3 class="text-center">A CSV file must be uploaded before price modification can occur.</h3>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="col-md-6">
-        <div class="form-group">
-            <label class="col-md-2 control-label" for="CSVFile">CSV File:</label>
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.CSVFile, new { type = "file", @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-primary" value="Upload" />
-                @Html.ActionLink("Delete", "Delete", "Home", null, new { @class = "btn btn-danger" })
-            </div>
-        </div>
-    </div>
+    <br />
+    <br />
+    <p style="color:red">@Model.ErrorMessage</p>
 }
-
-@if (Model.Uploaded)
+else
 {
-    using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    if (!string.IsNullOrEmpty(Model.ErrorMessage) && Model.ErrorMessage.Contains("syntax"))
     {
-        //@Html.HiddenFor(m => m.Mode, new { value = "price" })
-        <input type="hidden" name="Mode" value="price" />
+        <button id="btnDetails" class="btn btn-default">Technical Details</button>
+        <input type="hidden" id="errorMessage" value="@Model.ErrorMessage" />
+    }
+
+    using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+    {
+        //@Html.HiddenFor(m => m.Mode, new { value = "csv" })
+        @Html.HiddenFor(m => m.Uploaded)
+        <input type="hidden" name="Mode" value="csv" />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
         <div class="col-md-6">
             <div class="form-group">
-                <label class="col-md-2 control-label" for="PriceId">Price Id:</label>
+                <label class="col-md-2 control-label" for="CSVFile">CSV File:</label>
                 <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.PriceId, new { @class = "form-control", type = "text", @readonly = "true", style = "width:70px" })
-                </div>
-                <label class="col-md-2 control-label" for="NewPrice">New Price:</label>
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewPrice, new { @class = "form-control", type = "number", step = "0.01" })
+                    @Html.TextBoxFor(m => m.CSVFile, new { type = "file", @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" class="btn btn-primary" value="Change Price" />
+                    <input type="submit" class="btn btn-primary" value="Upload" />
+                    @Html.ActionLink("Delete", "Delete", "Home", null, new { @class = "btn btn-danger" })
                 </div>
             </div>
         </div>
     }
 
-    <button id="btnInfo" class="btn btn-default">Info</button>
+    <!--Displays the Change Price form and the price table if data exists in the database-->
+    if (Model.Uploaded)
+    {
+        using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            //@Html.HiddenFor(m => m.Mode, new { value = "price" })
+            <input type="hidden" name="Mode" value="price" />
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="PriceId">Price Id:</label>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.PriceId, new { @class = "form-control", type = "text", @readonly = "true", style = "width:70px" })
+                    </div>
+                    <label class="col-md-2 control-label" for="NewPrice">New Price:</label>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.NewPrice, new { @class = "form-control", type = "number", step = "0.01" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" class="btn btn-primary" value="Change Price" />
+                    </div>
+                </div>
+            </div>
+        }
 
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Price ID#</th>
-                <th>Price Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var line in Model.Prices)
-            {
-                <tr class="priceRow">
-                    <td class="priceId">@line.PriceId</td>
-                    <td class="price">@string.Format("{0:c}", line.Price)</td>
+        <button id="btnInfo" class="btn btn-default">Info</button>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Price ID#</th>
+                    <th>Price Value</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var line in Model.Prices)
+                {
+                    <tr class="priceRow">
+                        <td class="priceId">@line.PriceId</td>
+                        <td class="price">@string.Format("{0:c}", line.Price)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 }
+
+
 
 @section Scripts
 {
     <script>
         $(document).ready(function () {
+            var errorMessage = $('#errorMessage').val()
             $('.priceRow').click(function (e) {
                 $('#PriceId').val($(this).find('.priceId').text())
                 $('#NewPrice').val($(this).find('.price').text().slice(1))
             });
             $('#btnInfo').click(function (e) {
+
                 alert("Click on a row to edit its data.\nUse the up and down arrows to increment the price.")
+            });
+            $('#btnDetails').click(function (e) {
+                alert(errorMessage)
             });
         });
     </script>
