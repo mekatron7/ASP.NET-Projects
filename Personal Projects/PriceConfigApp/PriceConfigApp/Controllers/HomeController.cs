@@ -75,7 +75,7 @@ namespace PriceConfigApp.Controllers
                         string[] row = line.Split(',');
                         if(row.Length == 1)
                         {
-                            query = "insert into Prices values('bad', 'data')";
+                            query = $"insert into Prices values('{row[0]}', 'invalid')";
                             break;
                         }
 
@@ -94,7 +94,7 @@ namespace PriceConfigApp.Controllers
                         }
                         catch(Exception ex)
                         {
-                            if(ex.Message.Contains("syntax")) ModelState.AddModelError("", "The csv file could not be uploaded due to invalid data.");
+                            if(!ex.Message.Contains("SQL Server")) ModelState.AddModelError("", "The csv file could not be uploaded due to invalid data.");
 
                             model.ErrorMessage = $"{ex.Source}: {ex.Message}";
 
@@ -128,9 +128,19 @@ namespace PriceConfigApp.Controllers
         [HttpPost]
         public ActionResult Delete(string a)
         {
-            DeleteData();
+            var model = new PriceConfigVM();
 
-            return RedirectToAction("Index");
+            try
+            {
+                DeleteData();
+            }
+            catch(Exception ex)
+            {
+                model.ErrorMessage = $"{ex.Source}: {ex.Message}";
+            }
+
+
+            return View("Index", model);
         }
 
         public void DeleteData()

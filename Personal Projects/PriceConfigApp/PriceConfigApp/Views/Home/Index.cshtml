@@ -8,7 +8,7 @@
 <h3 class="text-center">A CSV file must be uploaded before price modification can occur.</h3>
 <hr />
 
-@if (!string.IsNullOrEmpty(Model.ErrorMessage) && !Model.ErrorMessage.Contains("syntax"))
+@if (!string.IsNullOrEmpty(Model.ErrorMessage) && Model.ErrorMessage.Contains("SQL Server"))
 {
     <br />
     <br />
@@ -16,7 +16,7 @@
 }
 else
 {
-    if (!string.IsNullOrEmpty(Model.ErrorMessage) && Model.ErrorMessage.Contains("syntax"))
+    if (!string.IsNullOrEmpty(Model.ErrorMessage) && !Model.ErrorMessage.Contains("SQL Server"))
     {
         <button id="btnDetails" class="btn btn-default">Technical Details</button>
         <input type="hidden" id="errorMessage" value="@Model.ErrorMessage" />
