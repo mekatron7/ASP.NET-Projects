@@ -22,3 +22,5 @@ C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceCo
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\obj\Debug\PriceConfigApp.csproj.CoreCompileInputs.cache
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\obj\Debug\PriceConfigApp.dll
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\obj\Debug\PriceConfigApp.pdb
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\bin\PriceConfig.Data.dll
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\bin\PriceConfig.Data.pdb

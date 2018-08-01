@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿using PriceConfig.Data;
 using PriceConfigApp.Models;
 using System;
 using System.Collections.Generic;
@@ -13,8 +13,8 @@ namespace PriceConfigApp.Controllers
 {
     public class HomeController : Controller
     {
-        string _connString = ConfigurationManager.ConnectionStrings["PriceConfig"].ConnectionString;
         static List<PriceItem> Prices = new List<PriceItem>();
+        DatabaseRepo repo = new DatabaseRepo();
 
         // GET: Home
         public ActionResult Index()
@@ -22,19 +22,15 @@ namespace PriceConfigApp.Controllers
             //Sets up the model and checks to see if there is info uploaded to the database
             PriceConfigVM model = new PriceConfigVM();
 
-            using (var cn = new SqlConnection(_connString))
+            try
             {
-                try
-                {
-                    Prices = cn.Query<PriceItem>("select * from Prices", commandType: System.Data.CommandType.Text).ToList();
-                    model.Uploaded = (Prices.Count > 0) ? true : false;
-                    model.Prices = Prices;
-                }
-                catch(Exception ex)
-                {
-                    model.ErrorMessage = $"{ex.Source}: {ex.Message}";
-                }
-                
+                Prices = repo.GetPrices();
+                model.Uploaded = (Prices.Count > 0) ? true : false;
+                model.Prices = Prices;
+            }
+            catch (Exception ex)
+            {
+                model.ErrorMessage = $"{ex.Source}: {ex.Message}";
             }
 
             return View(model);
@@ -62,55 +58,25 @@ namespace PriceConfigApp.Controllers
                         return View(model);
                     }
 
-                    //Parse CSV and upload to database
-                    //Parsing section
-                    FileInfo csv = new FileInfo(model.CSVFile.FileName);
-                    TextReader reader = csv.OpenText();
-                    reader.ReadLine();
-
-                    string line;
-                    string query = "";
-                    while ((line = reader.ReadLine()) != null)
+                    //Try parsing CSV file and upload to the database
+                    try
                     {
-                        string[] row = line.Split(',');
-                        if(row.Length == 1)
-                        {
-                            query = $"insert into Prices values('{row[0]}', 'invalid')";
-                            break;
-                        }
-
-                        query += $"insert into Prices values('{row[0]}', {row[1]}) ";
+                        if (model.Uploaded) DeleteData();
+                        repo.InsertData(ParseCSV(model.CSVFile));
                     }
-
-                    //Upload section
-                    using (var cn = new SqlConnection(_connString))
+                    catch(Exception ex)
                     {
-                        try
-                        {
-                            //Delete data in database if there's already existing data
-                            if (model.Uploaded) DeleteData();
+                        if (!ex.Message.Contains("SQL Server")) ModelState.AddModelError("", "The csv file could not be uploaded due to invalid data.");
 
-                            cn.Execute(query, commandType: System.Data.CommandType.Text);
-                        }
-                        catch(Exception ex)
-                        {
-                            if(!ex.Message.Contains("SQL Server")) ModelState.AddModelError("", "The csv file could not be uploaded due to invalid data.");
+                        model.ErrorMessage = $"{ex.Source}: {ex.Message}";
 
-                            model.ErrorMessage = $"{ex.Source}: {ex.Message}";
-
-                            return View(model);
-                        }
+                        return View(model);
                     }
                 }
                 else
                 {
                     //Alter price in database
-                    using (var cn = new SqlConnection(_connString))
-                    {
-                        string query = $"update Prices set Price = {model.NewPrice} where PriceId = {model.PriceId}";
-                        cn.Execute(query, commandType: System.Data.CommandType.Text);
-                    }
-
+                    repo.UpdatePrice(model.PriceId, model.NewPrice);
                 }
 
                 return RedirectToAction("Index");
@@ -143,13 +109,33 @@ namespace PriceConfigApp.Controllers
             return View("Index", model);
         }
 
+        //Parse CSV data
+        public List<string[]> ParseCSV(HttpPostedFileBase csvFile)
+        {
+            FileInfo csv = new FileInfo(csvFile.FileName);
+            TextReader reader = csv.OpenText();
+            reader.ReadLine();
+
+            string line;
+            List<string[]> inserts = new List<string[]>();
+            while ((line = reader.ReadLine()) != null)
+            {
+                string[] row = line.Split(',');
+                if (row.Length == 1)
+                {
+                    inserts.Add(new string[] { row[0], "invalid" });
+                    break;
+                }
+                inserts.Add(row);
+            }
+
+            return inserts;
+        }
+
         public void DeleteData()
         {
             Prices.Clear();
-            using (var cn = new SqlConnection(_connString))
-            {
-                cn.Execute("delete from Prices", commandType: System.Data.CommandType.Text);
-            }
+            repo.DeleteData();
         }
     }
 }
