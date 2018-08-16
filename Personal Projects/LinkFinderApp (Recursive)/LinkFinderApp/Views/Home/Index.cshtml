@@ -1,0 +1,103 @@
+﻿@model LinkFinderApp.Models.LinkFinderVM
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="m">URL:</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.URL, new { @class = "form-control", type = "url" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="NumOfLevels"># of Levels:</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NumOfLevels, new { @class = "form-control", type = "number", min = "1", max = "5" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="NumOfLinks"># of Links:</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NumOfLinks, new { @class = "form-control", type = "number", min = "1", max = "20" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="AllLinksFromFirstPage">Do all links from first page:</label>
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(m => m.AllLinksFromFirstPage, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="KeepLinkStyles">Keep Link Styles:</label>
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(m => m.KeepLinkStyles, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-primary" value="Get Links" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.ErrorMessages.Count != 0)
+{
+    <h2>Error Messages:</h2>
+    foreach (var message in Model.ErrorMessages)
+    {
+        <p style="color:red">@message</p>
+    }
+}
+
+<h2>Links from "@Model.URL":</h2>
+<p>Number of Links: @Model.LinksTotal</p>
+@foreach (var link in Model.Links)
+{
+    if (Model.KeepLinkStyles)
+    {
+        <p>@Html.Raw(link)</p>
+    }
+    else
+    {
+        <p><a href="@link" target="_blank">@link</a></p>
+    }
+
+}
+
+<h1>Website content:</h1>
+<p>@Model.Content</p>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            if ($('#NumOfLevels').val() < 2) {
+                $('#AllLinksFromFirstPage').prop("disabled", true);
+                $('#AllLinksFromFirstPage').prop("checked", false);
+            }
+            else {
+                $('#AllLinksFromFirstPage').prop("disabled", false);
+            }
+            $('#NumOfLevels').change(function (e) {
+                if (this.value < 2) {
+                    $('#AllLinksFromFirstPage').prop("disabled", true);
+                    $('#AllLinksFromFirstPage').prop("checked", false);
+                }
+                else {
+                    $('#AllLinksFromFirstPage').prop("disabled", false);
+                }
+            })
+        })
+    </script>
+    
+}

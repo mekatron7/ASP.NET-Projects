@@ -1,0 +1,41 @@
+﻿@model LinkFinderApp.Models.LinkFinderVM
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="m">URL:</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.URL, new { @class = "form-control", type = "url" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Get Links" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6"><br /><br /><br /><br /><br /><br /><br /><abbr></abbr></div>
+}
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p style="color:red">Error- @Model.ErrorMessage</p>
+}
+
+<h2>Links from "@Model.URL":</h2>
+<p>Number of Links: @Model.NumOfLinks</p>
+@foreach(var link in Model.Links)
+{
+    <p><a href="@link">@link</a></p>
+}
+
+<h1>Website content:</h1>
+<p>@Model.Content</p>
