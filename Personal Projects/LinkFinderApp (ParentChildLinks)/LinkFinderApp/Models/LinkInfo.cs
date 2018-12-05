@@ -9,7 +9,7 @@ namespace LinkFinderApp.Models
     {
         public string LinkContent { get; set; }
         public string LinkAddress { get; set; }
-        public string ParentLink { get; set; }
+        public LinkInfo ParentLink { get; set; }
         public List<LinkInfo> ChildLinks { get; set; }
     }
 }

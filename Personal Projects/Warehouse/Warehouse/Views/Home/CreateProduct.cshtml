@@ -1,0 +1,42 @@
+﻿@model Warehouse.Data2.Product
+
+@{
+    ViewBag.Title = "CreateProduct";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Product</h2>
+
+@using (Html.BeginForm("CreateProduct", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <h4 class="text-center">Please fill in the criteria below.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="SKU">SKU: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.SKU, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Size">Size: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Size, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="ProdDescription">Product Description: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.ProductDescription, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancel", "GetProducts", "Home", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </div>
+        </div>
+    </div>
+}
+

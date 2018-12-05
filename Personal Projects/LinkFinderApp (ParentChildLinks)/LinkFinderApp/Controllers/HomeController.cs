@@ -10,12 +10,13 @@ namespace LinkFinderApp.Controllers
 {
     public class HomeController : Controller
     {
+        private List<string> _duplicateCheck = new List<string>();
+        private static LinkFinderVM _savedInfo = new LinkFinderVM();
+
         // GET: Home
         public ActionResult Index()
         {
-            LinkFinderVM model = new LinkFinderVM();
-
-            return View(model);
+            return View(_savedInfo);
         }
 
         [HttpPost]
@@ -24,6 +25,8 @@ namespace LinkFinderApp.Controllers
             LinkInfo link = new LinkInfo { LinkContent = model.URL, LinkAddress = model.URL };
             GetLinksFromWebsite(link, model, model.NumOfLevels);
             model.LinksTotal = model.Links.Count;
+            _savedInfo = model;
+            _duplicateCheck.Clear();
 
             return View(model);
         }
@@ -49,13 +52,13 @@ namespace LinkFinderApp.Controllers
 
             if (!error)
             {
-                List<LinkInfo> childLinks = (model.KeepLinkStyles) ? GetLinksWithTag(model, url) : GetLinksNoTag(model, url);
+                List<LinkInfo> childLinks = (model.KeepLinkStyles) ? GetLinksWithTag(model, link) : GetLinksNoTag(model, link);
 
                 //model.Links.AddRange(realLinks);
                 //link.ParentLink = url;
                 link.ChildLinks = new List<LinkInfo>();
                 link.ChildLinks.AddRange(childLinks);
-                if (link.ParentLink == model.URL) model.Links.Add(link);
+                if (link.ParentLink?.LinkAddress == model.URL) model.Links.Add(link);
 
                 if (numOfLevels > 0)
                 {
@@ -67,23 +70,36 @@ namespace LinkFinderApp.Controllers
             }
         }
 
-        public List<LinkInfo> GetLinksNoTag(LinkFinderVM model, string url)
+        public List<LinkInfo> GetLinksNoTag(LinkFinderVM model, LinkInfo parent)
         {
             List<LinkInfo> realLinks = new List<LinkInfo>();
-            string[] links = model.Content.Split(new string[] { "href=\"", "url?q=" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] links = model.Content.Split(new string[] { "href=\"", "href=\'", "url?q=" }, StringSplitOptions.RemoveEmptyEntries);
+            int linkNum = 0;
             foreach (var link in links)
             {
+                linkNum++;
+                if (linkNum < model.StartAtLinkNum && model.StartAtLinkNum < links.Length) continue;
+
                 if (realLinks.Count < model.NumOfLinks || model.AllLinksFromFirstPage)
                 {
                     if (!(link.StartsWith("http") || link.StartsWith("//www"))) continue;
                     int index = link.IndexOf('"');
+                    if (index == -1) index = link.IndexOf('\'');
                     if (index != -1)
                     {
-                        LinkInfo newLink = new LinkInfo();
-                        newLink.LinkContent = link.Substring(0, index);
-                        newLink.LinkAddress = newLink.LinkContent;
-                        newLink.ParentLink = url;
-                        realLinks.Add(newLink);
+                        string address = link.Substring(0, index);
+                        if (model.NoDuplicateSites)
+                        {
+                            if (!_duplicateCheck.Contains(address))
+                            {
+                                _duplicateCheck.Add(address);
+                                realLinks.Add(new LinkInfo { LinkContent = address, LinkAddress = address, ParentLink = parent });
+                            }
+                        }
+                        else
+                        {
+                            realLinks.Add(new LinkInfo { LinkContent = address, LinkAddress = address, ParentLink = parent });
+                        }
                     }
                 }
                 else
@@ -96,12 +112,16 @@ namespace LinkFinderApp.Controllers
             return realLinks;
         }
 
-        public List<LinkInfo> GetLinksWithTag(LinkFinderVM model, string url)
+        public List<LinkInfo> GetLinksWithTag(LinkFinderVM model, LinkInfo parent)
         {
             List<LinkInfo> realLinks = new List<LinkInfo>();
             string[] links = model.Content.Split(new string[] { "<a" }, StringSplitOptions.RemoveEmptyEntries);
+            int linkNum = 0;
             foreach(var link in links)
             {
+                linkNum++;
+                if (linkNum < model.StartAtLinkNum && model.StartAtLinkNum < links.Length) continue;
+
                 if(realLinks.Count < model.NumOfLinks || model.AllLinksFromFirstPage)
                 {
                     if (!link.Contains("href=\"")) continue;
@@ -110,23 +130,35 @@ namespace LinkFinderApp.Controllers
                     {
                         string possibleLink = link.Substring(0, index + 4);
                         possibleLink = "<a" + possibleLink;
-                        if (!possibleLink.Contains("http"))
+                        if (!(possibleLink.Contains("http") || possibleLink.Contains("www.")))
                         {
                             int insertIndex = possibleLink.IndexOf("href=\"") + 6;
 
-                            int domainLength = url.IndexOf('/', 8); //Start after the http(s)://
-                            if (domainLength != url.Length)
+                            int domainLength = parent.LinkAddress.IndexOf('/', 8); //Start after the http(s)://
+                            if (domainLength == -1) domainLength = parent.LinkAddress.Length;
+                            if (domainLength != parent.LinkAddress.Length)
                             {
-                                string domain = url.Substring(0, domainLength);
+                                string domain = parent.LinkAddress.Substring(0, domainLength);
                                 possibleLink = possibleLink.Insert(insertIndex, domain);
                             }
                             else
                             {
-                                possibleLink = possibleLink.Insert(insertIndex, url);
+                                possibleLink = possibleLink.Insert(insertIndex, parent.LinkAddress);
                             }
                         }
+                        if (model.NoDuplicateSites)
+                        {
+                            if (!_duplicateCheck.Contains(possibleLink))
+                            {
+                                _duplicateCheck.Add(possibleLink);
+                                realLinks.Add(new LinkInfo { LinkContent = possibleLink, ParentLink = parent, LinkAddress = GetAddressFromTag(possibleLink) });
+                            }
+                        }
+                        else
+                        {
+                            realLinks.Add(new LinkInfo { LinkContent = possibleLink, ParentLink = parent, LinkAddress = GetAddressFromTag(possibleLink) });
+                        }
 
-                        realLinks.Add(new LinkInfo { LinkContent = possibleLink, ParentLink = url, LinkAddress = GetAddressFromTag(possibleLink) });
                     }
                 }
                 else
@@ -144,6 +176,7 @@ namespace LinkFinderApp.Controllers
             int index = tag.IndexOf("href=\"") + 6;
             string address = tag.Substring(index);
             index = address.IndexOf('"');
+            if (index == -1) index = address.IndexOf('\'');
             address = address.Substring(0, index);
 
             return address;

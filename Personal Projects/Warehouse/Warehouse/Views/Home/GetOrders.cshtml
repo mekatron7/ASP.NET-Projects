@@ -1,0 +1,33 @@
+﻿@model List<Warehouse.Data2.Order>
+
+@{
+    ViewBag.Title = "GetOrders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Orders</h2>
+
+@if (Model.Count == 0)
+{
+    <p>There are no orders to display.</p>
+}
+else
+{
+
+    foreach (var order in Model)
+    {
+        <div class="row">
+            <hr />
+            <p>Order Number: @order.OrderNumber</p>
+            <p>Date Ordered: @order.DateOrdered</p>
+            <p>Customer Name: @order.CustomerName</p>
+            <p>Customer Address: @order.CustomerAddress</p>
+            <p>
+                @Html.ActionLink("Edit", "EditOrder", new { orderNum = order.OrderNumber }, new { @class = "btn btn primary" }) |
+                @Html.ActionLink("Delete", "DeleteOrder", new { orderNum = order.OrderNumber }, new { @class = "btn btn primary" })
+            </p>
+            <hr />
+        </div>
+    }
+}
+

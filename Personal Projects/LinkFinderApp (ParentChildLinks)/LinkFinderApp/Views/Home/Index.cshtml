@@ -30,6 +30,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-md-2 control-label" for="StartAtLinkNum">Start at link #:</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.StartAtLinkNum, new { @class = "form-control", type = "number", min = "1", max = "50" })
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-2 control-label" for="AllLinksFromFirstPage">Do all links from first page:</label>
                 <div class="col-md-10">
                     @Html.CheckBoxFor(m => m.AllLinksFromFirstPage, new { @class = "form-control" })
@@ -39,6 +45,12 @@
                 <label class="col-md-2 control-label" for="KeepLinkStyles">Keep Link Styles:</label>
                 <div class="col-md-10">
                     @Html.CheckBoxFor(m => m.KeepLinkStyles, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="NoDuplicateSites">No Duplicate Sites:</label>
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(m => m.NoDuplicateSites, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
@@ -99,7 +111,36 @@
     }
     else
     {
-        <p><a href="@link" target="_blank">@link</a></p>
+        <h4>Link #: @Model.Links.FindIndex(m => m.Equals(link))</h4>
+        <h2><a href="@link.LinkAddress" target="_blank">@link.LinkAddress</a></h2>
+        if (link.ChildLinks != null)
+        {
+            foreach (var child in link.ChildLinks)
+            {
+                <h3><a href="@child.LinkAddress" style="color:green" target="_blank">@child.LinkAddress</a></h3>
+                if (child.ChildLinks != null)
+                {
+                    foreach (var grandchild in child.ChildLinks)
+                    {
+                        <h4><a href="@grandchild.LinkAddress" style="color:red" target="_blank">@grandchild.LinkAddress</a></h4>
+                        if (grandchild.ChildLinks != null)
+                        {
+                            foreach (var greatGrandchild in grandchild.ChildLinks)
+                            {
+                                <h5><a href="@greatGrandchild.LinkAddress" style="color:indigo" target="_blank">@greatGrandchild.LinkAddress</a></h5>
+                                if (greatGrandchild.ChildLinks != null)
+                                {
+                                    foreach (var greatGreatGrandchild in greatGrandchild.ChildLinks)
+                                    {
+                                        <h6><a href="@greatGreatGrandchild.LinkAddress" style="color:lightcoral" target="_blank">@greatGreatGrandchild.LinkAddress</a></h6>
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

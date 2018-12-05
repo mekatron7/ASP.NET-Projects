@@ -1,0 +1,42 @@
+﻿@model Warehouse.Models.InventoryVM
+
+@{
+    ViewBag.Title = "CreateInventory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Inventory</h2>
+
+@using (Html.BeginForm("CreateInventory", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <h4 class="text-center">Please fill in the criteria below.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="ProductId">Product: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.ProductId, Model.Products, "- Select a Product -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="BinId">Bin: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.BinId, Model.Bins, "- Select a Bin -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Qty">Qty: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Qty, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancel", "GetAllInventory", "Home", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </div>
+        </div>
+    </div>
+}
+

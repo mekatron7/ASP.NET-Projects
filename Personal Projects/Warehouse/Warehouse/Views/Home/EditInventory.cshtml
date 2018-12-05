@@ -1,0 +1,50 @@
+﻿@model Warehouse.Models.InventoryVM
+
+@{
+    ViewBag.Title = "EditInventory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit Inventory</h2>
+
+<hr />
+<p>Inventory Id: @Model.InventoryId</p>
+@{ var prod = Model.GetProductInfo(); }
+<p>Product SKU: @prod.SKU</p>
+<p>Product Description: @prod.ProductDescription</p>
+<p>Product Size: @prod.Size</p>
+<p>Bin Name: @Model.GetBinInfo().BinName</p>
+<p>Quantity: @Model.OldQty</p>
+<hr />
+
+@using (Html.BeginForm("EditInventory", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <h4 class="text-center">Please fill in the criteria below.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.InventoryId);
+    @Html.HiddenFor(m => m.ProductId);
+    @Html.HiddenFor(m => m.OldBinId);
+    @Html.HiddenFor(m => m.OldQty);
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="BinId">Bin: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.BinId, Model.Bins, "- Select a Bin -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Qty">Qty: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Qty, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancel", "GetAllInventory", "Home", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </div>
+        </div>
+    </div>
+}
+

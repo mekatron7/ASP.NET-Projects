@@ -1,0 +1,36 @@
+﻿@model Warehouse.Data2.Bin
+
+@{
+    ViewBag.Title = "CreateBin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Bin</h2>
+
+@using (Html.BeginForm("CreateBin", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <h4 class="text-center">Please fill in the criteria below.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="BinName">Bin Name: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.BinName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Capacity">Capacity: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Capacity, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancel", "GetBins", "Home", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </div>
+        </div>
+    </div>
+}
+

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Data2", "Warehouse.Data2\Warehouse.Data2.csproj", "{92EB22D9-DB52-496F-B8A0-B259D9E1E5A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse", "Warehouse\Warehouse.csproj", "{19DADE46-7FA9-4704-9F03-690C1E356144}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92EB22D9-DB52-496F-B8A0-B259D9E1E5A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92EB22D9-DB52-496F-B8A0-B259D9E1E5A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92EB22D9-DB52-496F-B8A0-B259D9E1E5A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92EB22D9-DB52-496F-B8A0-B259D9E1E5A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19DADE46-7FA9-4704-9F03-690C1E356144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19DADE46-7FA9-4704-9F03-690C1E356144}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19DADE46-7FA9-4704-9F03-690C1E356144}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19DADE46-7FA9-4704-9F03-690C1E356144}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CCFDCF2F-BAC2-4CA0-9882-D3A21A270D2A}
+	EndGlobalSection
+EndGlobal

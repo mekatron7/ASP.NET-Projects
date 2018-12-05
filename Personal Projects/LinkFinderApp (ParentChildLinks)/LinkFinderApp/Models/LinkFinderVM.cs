@@ -14,7 +14,9 @@ namespace LinkFinderApp.Models
         public List<string> ErrorMessages { get; set; } = new List<string>();
         public int NumOfLevels { get; set; }
         public int NumOfLinks { get; set; }
+        public int StartAtLinkNum { get; set; }
         public bool AllLinksFromFirstPage { get; set; }
         public bool KeepLinkStyles { get; set; }
+        public bool NoDuplicateSites { get; set; }
     }
 }
