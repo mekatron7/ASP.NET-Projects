@@ -1,0 +1,41 @@
+﻿@model Warehouse.Data2.Order
+
+@{
+    ViewBag.Title = "ViewOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Order Details for @Model.CustomerName</h2>
+
+<div>
+    <hr />
+    <p>Order Number: @Model.OrderNumber</p>
+    <p>Customer Name: @Model.CustomerName</p>
+    <p>Customer Address: @Model.CustomerAddress</p>
+    <p>Date Created: @Model.DateOrdered.ToShortDateString()</p>
+    <hr />
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Produck SKU</th>
+            <th>Product Description</th>
+            <th>Qty</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var ol in Model.GetOrderLines())
+        {
+            <tr>
+                <td>@ol.GetProductInfo().SKU</td>
+                <td>@ol.GetProductInfo().ProductDescription</td>
+                <td>@ol.Qty</td>
+                <td>@Html.ActionLink("Change Qty", "ChangeQty", new { id = ol.OrderLineId }, new { @class = "btn btn primary" }) |
+                @Html.ActionLink("Delete", "DeleteOrderLine", new { orderId = ol.OrderId, prodId = ol.ProductId }, new { @class = "btn btn primary" })</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

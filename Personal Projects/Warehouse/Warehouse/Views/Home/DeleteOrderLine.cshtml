@@ -1,0 +1,47 @@
+﻿@model Warehouse.Data2.OrderLine
+
+@{
+    /**/
+
+    ViewBag.Title = "DeleteOrderLine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete Order Line</h2>
+
+@{ var orderInfo = Model.GetProductInfo();}
+
+<hr />
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Produck SKU</th>
+            <th>Product Description</th>
+            <th>Qty</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@orderInfo.SKU</td>
+            <td>@orderInfo.ProductDescription</td>
+            <td>@Model.Qty</td>
+        </tr>
+    </tbody>
+</table>
+<hr />
+
+@using (Html.BeginForm("DeleteOrderLine", "Home", FormMethod.Post))
+{
+    <p>Are you sure you want to delete this item?</p>
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.OrderLineId)
+    @Html.HiddenFor(m => m.OrderId)
+    @Html.HiddenFor(m => m.ProductId)
+    @Html.HiddenFor(m => m.Qty)
+
+    @Html.ActionLink("Cancel", "ViewOrder", "Home", new { id = Model.OrderId }, new { @class = "btn btn-default" })
+    <button type="submit" class="btn btn-danger">Delete</button>
+}
+
+
+

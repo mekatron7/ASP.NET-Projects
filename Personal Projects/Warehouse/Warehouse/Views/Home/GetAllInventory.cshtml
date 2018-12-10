@@ -1,8 +1,10 @@
 ﻿@model List<Warehouse.Data2.Inventory>
 
 @{
-    ViewBag.Title = "GetAllInventory";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "GetAllInventory";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Inventory</h2>
@@ -13,23 +15,27 @@
 }
 else
 {
-
-    foreach (var inv in Model)
-    {
     <div class="row">
-        <hr />
-        <p>Inventory Id: @inv.InventoryId</p>
-        @{ var prod = inv.GetProductInfo(); }
-        <p>Product SKU: @prod.SKU</p>
-        <p>Product Description: @prod.ProductDescription</p>
-        <p>Product Size: @prod.Size</p>
-        <p>Bin Name: @inv.GetBinInfo().BinName</p>
-        <p>Quantity: @inv.Qty</p>
-        <p>
-            @Html.ActionLink("Edit", "EditInventory", new { invId = inv.InventoryId }, new { @class = "btn btn primary" }) |
-            @Html.ActionLink("Delete", "DeleteInventory", new { invId = inv.InventoryId }, new { @class = "btn btn primary" })
-        </p>
-        <hr />
+        @foreach (var inv in Model)
+        {
+        <div class="col-md-6">
+            <hr />
+            <p>Inventory Id: @inv.InventoryId</p>
+            @{ var prod = inv.GetProductInfo(); }
+            <p>Product SKU: @prod.SKU</p>
+            <p>Product Description: @prod.ProductDescription</p>
+            <p>Product Size: @prod.Size</p>
+            <p>Bin Name: @inv.GetBinInfo().BinName</p>
+            <p>Quantity: @inv.Qty</p>
+            <p>
+                @Html.ActionLink("View Bin", "BinContents", "Home", new { id = inv.BinId }, new { @class = "btn" }) |
+                @Html.ActionLink("Edit", "EditInventory", new { invId = inv.InventoryId }, new { @class = "btn" }) |
+                @Html.ActionLink("Delete", "DeleteInventory", new { invId = inv.InventoryId }, new { @class = "btn" }) |
+                @Html.ActionLink("Transfer", "TransferInventory", new { invId = inv.InventoryId }, new { @class = "btn" })
+            </p>
+            <hr />
+        </div>
+        }
     </div>
-    }
+    
 }

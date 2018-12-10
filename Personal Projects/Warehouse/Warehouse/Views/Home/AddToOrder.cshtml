@@ -1,0 +1,51 @@
+﻿@model Warehouse.Models.AddToOrderVM
+
+@{
+    ViewBag.Title = "AddToOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add To Order</h2>
+
+<hr />
+<p>Product Id: @Model.Prod.ProductId</p>
+<p>SKU: @Model.Prod.SKU</p>
+<p>Size: @Model.Prod.Size</p>
+<p>Description: @Model.Prod.ProductDescription</p>
+<p>Quantity available: @Model.Prod.GetInvQuantity()</p>
+<hr />
+
+@using (Html.BeginForm("AddToOrder", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <h4 class="text-center">Please fill in the criteria below.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.ProdId)
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="OrderNum">Select an Order: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.OrderNum, Model.Orders, "- Select an Order -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="BinId">Select a Bin: </label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.BinId, Model.Bins, "- Select a Bin -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Qty">Order Qty: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Qty, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancel", "GetAllProducts", "Home", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-primary" value="Add to Order" />
+            </div>
+        </div>
+    </div>
+}
+

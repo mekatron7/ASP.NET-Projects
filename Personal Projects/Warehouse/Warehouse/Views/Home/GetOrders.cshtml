@@ -13,21 +13,23 @@
 }
 else
 {
-
-    foreach (var order in Model)
-    {
-        <div class="row">
+    <div class="row">
+        @foreach (var order in Model)
+        {
+        <div class="col-md-4">
             <hr />
             <p>Order Number: @order.OrderNumber</p>
             <p>Date Ordered: @order.DateOrdered</p>
             <p>Customer Name: @order.CustomerName</p>
             <p>Customer Address: @order.CustomerAddress</p>
-            <p>
+            <p class="text-center">
+                @if (order.GetOrderLines().Count != 0) { @Html.ActionLink("View Order", "ViewOrder", new { id = order.OrderNumber }, new { @class = "btn" }); <text> | </text> }
                 @Html.ActionLink("Edit", "EditOrder", new { orderNum = order.OrderNumber }, new { @class = "btn btn primary" }) |
                 @Html.ActionLink("Delete", "DeleteOrder", new { orderNum = order.OrderNumber }, new { @class = "btn btn primary" })
             </p>
             <hr />
         </div>
-    }
+        }
+    </div>
 }
 

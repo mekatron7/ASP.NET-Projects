@@ -1,0 +1,44 @@
+﻿@model Warehouse.Models.BinContents
+
+@{
+                /**/
+
+                ViewBag.Title = "BinContents";
+                Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Contents of @Model.BinName</h2>
+
+@if (Model.Contents.Count == 0)
+{
+    <p>This bin is empty.</p>
+    <p>@Html.ActionLink("Back", "GetBins", "Home", null, new { @class = "btn btn-default" })</p>
+}
+ else
+{
+     var binCapacity = Model.Contents[0].GetBinInfo().Capacity;
+    <div class="row">
+        @foreach (var inv in Model.Contents)
+        {
+            <div class="col-md-6">
+                <hr />
+                <p>Inventory Id: @inv.InventoryId</p>
+                @{ var prod = inv.GetProductInfo(); }
+                <p>Product SKU: @prod.SKU</p>
+                <p>Product Description: @prod.ProductDescription</p>
+                <p>Product Size: @prod.Size</p>
+                <p>Quantity: @inv.Qty</p>
+                @{ var percentTaken = ((decimal)inv.Qty * prod.Size / (decimal)binCapacity) * 100;}
+                <p>Percentage of bin space taken: @percentTaken%</p>
+                <p>
+                    @Html.ActionLink("Edit", "EditInventory", new { invId = inv.InventoryId }, new { @class = "btn" }) |
+                    @Html.ActionLink("Delete", "DeleteInventory", new { invId = inv.InventoryId }, new { @class = "btn" }) |
+                    @Html.ActionLink("Transfer", "TransferInventory", new { invId = inv.InventoryId }, new { @class = "btn" })
+                </p>
+                <hr />
+            </div>
+        }
+    </div>
+}
+
+

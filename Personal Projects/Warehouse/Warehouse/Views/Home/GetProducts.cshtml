@@ -13,21 +13,26 @@
 }
 else
 {
-
-    foreach (var product in Model)
-    {
-        <div class="row">
-            <hr />
-            <p>Product Id: @product.ProductId</p>
-            <p>SKU: @product.SKU</p>
-            <p>Size: @product.Size</p>
-            <p>Description: @product.ProductDescription</p>
-            <p>
-                @Html.ActionLink("Edit", "EditProduct", new { id = product.ProductId }, new { @class = "btn" }) | 
-                @Html.ActionLink("Delete", "DeleteProduct", new { id = product.ProductId }, new { @class = "btn" })
-            </p>
-            <hr />
-        </div>
-    }
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            var hasInventory = product.HasInventory();
+            <div class="col-md-4">
+                <hr />
+                <p>Product Id: @product.ProductId</p>
+                <p>SKU: @product.SKU</p>
+                <p>Size: @product.Size</p>
+                <p>Description: @product.ProductDescription</p>
+                @if (!hasInventory) { <p style="color:red">Out of stock :(</p>}
+                else { <p>Quantity available: @product.GetInvQuantity()</p>}
+                <p class="text-center">
+                    @if (hasInventory) { @Html.ActionLink("Add to Order", "AddToOrder", new { id = product.ProductId }, new { @class = "btn" }); <text> | </text> }
+                    @Html.ActionLink("Edit", "EditProduct", new { id = product.ProductId }, new { @class = "btn" }) |
+                    @Html.ActionLink("Delete", "DeleteProduct", new { id = product.ProductId }, new { @class = "btn" })
+                </p>
+                <hr />
+            </div>
+        }
+    </div>
 }
 

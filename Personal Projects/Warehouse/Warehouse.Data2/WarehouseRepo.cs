@@ -54,7 +54,6 @@ namespace Warehouse.Data2
                 parameters.Add("@ProdId", prod.ProductId);
                 parameters.Add("@SKU", prod.SKU);
                 parameters.Add("@ProductDescrip", prod.ProductDescription);
-                parameters.Add("@Size", prod.Size);
 
                 cn.Execute("EditProduct", parameters, commandType: CommandType.StoredProcedure);
             }
@@ -168,10 +167,24 @@ namespace Warehouse.Data2
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@InventoryId", inv.InventoryId);
-                parameters.Add("@BinId", inv.BinId);
                 parameters.Add("@Qty", inv.Qty);
 
                 cn.Execute("EditInventory", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public void TransferInventory(Inventory inv, int fromBinId, byte invExists)
+        {
+            using (var cn = new SqlConnection(connString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", inv.ProductId);
+                parameters.Add("@TransferAmount", inv.Qty);
+                parameters.Add("@FromBinId", fromBinId);
+                parameters.Add("@ToBinId", inv.BinId);
+                parameters.Add("@InvExists", invExists);
+
+                cn.Execute("TransferInventory", parameters, commandType: CommandType.StoredProcedure);
             }
         }
 
@@ -268,6 +281,17 @@ namespace Warehouse.Data2
 
                 return cn.QueryFirstOrDefault<OrderLine>("GetOrderLine", parameters, commandType: CommandType.StoredProcedure);
 
+            }
+        }
+
+        public List<OrderLine> GetOrderLines(int orderNum)
+        {
+            using(var cn = new SqlConnection(connString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@OrderId", orderNum);
+
+                return cn.Query<OrderLine>("GetOrderLines", parameters, commandType: CommandType.StoredProcedure).ToList();
             }
         }
 

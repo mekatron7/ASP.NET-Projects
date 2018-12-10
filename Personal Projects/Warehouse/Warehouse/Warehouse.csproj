@@ -146,6 +146,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AddToOrderVM.cs" />
+    <Compile Include="Models\BinContents.cs" />
     <Compile Include="Models\InventoryVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -201,6 +203,11 @@
     <Content Include="Views\Home\CreateInventory.cshtml" />
     <Content Include="Views\Home\EditInventory.cshtml" />
     <Content Include="Views\Home\DeleteInventory.cshtml" />
+    <Content Include="Views\Home\TransferInventory.cshtml" />
+    <Content Include="Views\Home\BinContents.cshtml" />
+    <Content Include="Views\Home\AddToOrder.cshtml" />
+    <Content Include="Views\Home\ViewOrder.cshtml" />
+    <Content Include="Views\Home\DeleteOrderLine.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

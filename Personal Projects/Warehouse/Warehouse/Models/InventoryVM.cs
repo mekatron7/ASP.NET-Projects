@@ -12,31 +12,34 @@ namespace Warehouse.Models
         public int InventoryId { get; set; }
         public int ProductId { get; set; }
         public int BinId { get; set; }
-        public int Qty { get; set; }
         public int OldBinId { get; set; }
+        public int Qty { get; set; }
         public int OldQty { get; set; }
         public List<SelectListItem> Products { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Bins { get; set; } = new List<SelectListItem>();
 
-        public void SetListItems(string mode)
+        public void SetListItems()
         {
             var wr = new WarehouseRepo();
-            if (mode == "create")
+            foreach (var prod in wr.GetProducts())
             {
-                var list = new List<SelectListItem>();
-                foreach (var prod in wr.GetProducts())
-                {
-                    list.Add(new SelectListItem { Text = prod.SKU, Value = prod.ProductId.ToString() });
-                }
-                Products = list;
+                Products.Add(new SelectListItem { Text = $"{prod.SKU} | {prod.ProductDescription}", Value = prod.ProductId.ToString() });
             }
 
-            var list2 = new List<SelectListItem>();
             foreach (var bin in wr.GetBins())
             {
-                list2.Add(new SelectListItem { Text = bin.BinName, Value = bin.BinId.ToString() });
+                Bins.Add(new SelectListItem { Text = bin.BinName, Value = bin.BinId.ToString() });
             }
-            Bins = list2;
+        }
+
+        public void SetTransferListItems()
+        {
+            var wr = new WarehouseRepo();
+
+            foreach(var bin in wr.GetBins().Where(b => b.BinId != OldBinId))
+            {
+                Bins.Add(new SelectListItem { Text = bin.BinName, Value = bin.BinId.ToString() });
+            }
         }
 
         public Product GetProductInfo()

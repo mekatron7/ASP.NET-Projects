@@ -13,20 +13,23 @@
 }
 else
 {
+    <div class="row">
+        @foreach (var bin in Model)
+        {
+            <div class="col-md-4">
+                <hr />
+                <p class="text-center">Bin Id: @bin.BinId</p>
+                <p class="text-center">Bin Name: @bin.BinName</p>
+                <p class="text-center">Bin Capacity: @bin.Capacity</p>
+                <p class="text-center">Available Space: @bin.AvailableSpace</p>
+                <p class="text-center">
+                    @Html.ActionLink("View Contents", "BinContents", new { id = bin.BinId }, new { @class = "btn btn primary" }) |
+                    @Html.ActionLink("Edit", "EditBin", new { id = bin.BinId }, new { @class = "btn btn primary" }) |
+                    @Html.ActionLink("Delete", "DeleteBin", new { name = bin.BinName }, new { @class = "btn btn primary" })
+                </p>
+                <hr />
+            </div>
+        }
+    </div>
 
-    foreach (var bin in Model)
-    {
-        <div class="row">
-            <hr />
-            <p>Bin Id: @bin.BinId</p>
-            <p>Bin Name: @bin.BinName</p>
-            <p>Bin Capacity: @bin.Capacity</p>
-            <p>Available Space: @bin.AvailableSpace</p>
-            <p>
-                @Html.ActionLink("Edit", "EditBin", new { id = bin.BinId }, new { @class = "btn btn primary" }) |
-                @Html.ActionLink("Delete", "DeleteBin", new { name = bin.BinName }, new { @class = "btn btn primary" })
-            </p>
-            <hr />
-        </div>
-    }
 }

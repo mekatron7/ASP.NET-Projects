@@ -88,14 +88,12 @@ go
 create procedure EditProduct(
 	@SKU varchar(7),
 	@ProductDescrip varchar(200),
-	@ProdId int,
-	@Size int
+	@ProdId int
 )
 as
 	update Product
 	set SKU = @SKU,
-	ProductDescription = @ProductDescrip,
-	Size = @Size
+	ProductDescription = @ProductDescrip
 	where ProductId = @ProdId
 go
 
@@ -252,6 +250,19 @@ as
 go
 
 if exists (select * from INFORMATION_SCHEMA.ROUTINES
+	where ROUTINE_NAME = 'GetOrderLines')
+		drop procedure GetOrderLines
+go
+
+create procedure GetOrderLines(
+	@OrderId int
+)
+as
+	select * from OrderLine
+	where OrderId = @OrderId
+go
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES
 	where ROUTINE_NAME = 'DeleteOrderLine')
 		drop procedure DeleteOrderLine
 go
@@ -284,11 +295,13 @@ go
 
 create procedure EditBin(
 	@BinName varchar(25),
-	@BinId int
+	@BinId int,
+	@AvailableSpace int
 )
 as
 	update Bin
-	set BinName = @BinName
+	set BinName = @BinName,
+	AvailableSpace = @AvailableSpace
 	where BinId = @BinId
 go
 
@@ -353,13 +366,11 @@ go
 
 create procedure EditInventory(
 	@InventoryId int,
-	@BinId int,
 	@Qty int
 )
 as
 	update Inventory
-	set BinId = @BinId,
-	Qty = @Qty
+	set Qty = @Qty
 	where InventoryId = @InventoryId
 go
 
@@ -406,3 +417,35 @@ as
 	or ProductId = @ProductId
 	or BinId = @BinId
 go
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES
+	where ROUTINE_NAME = 'TransferInventory')
+		drop procedure TransferInventory
+go
+
+create procedure TransferInventory(
+	@ProductId int,
+	@TransferAmount int,
+	@FromBinId int,
+	@ToBinId int,
+	@InvExists bit
+)
+as
+	update Inventory
+	set Qty -= @TransferAmount
+	where ProductId = @ProductId
+	and BinId = @FromBinId
+if @InvExists = 1
+	update Inventory
+	set Qty += @TransferAmount
+	where ProductId = @ProductId
+	and BinId = @ToBinId
+else
+	insert into Inventory values(@ProductId, @ToBinId, @TransferAmount)
+go
+
+select * from Product
+
+update Bin
+set AvailableSpace = 200
+where BinId = 7
