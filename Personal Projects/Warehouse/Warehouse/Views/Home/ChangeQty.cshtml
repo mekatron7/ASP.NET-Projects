@@ -1,0 +1,65 @@
+﻿@model Warehouse.Data2.OrderLine
+
+@{
+    ViewBag.Title = "ChangeQty";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Change Quantity for @Model.GetProductInfo().ProductDescription</h2>
+
+@{ var orderInfo = Model.GetProductInfo();
+    var order = Model.GetOrderInfo();}
+
+<div>
+    <hr />
+    <p>Order Number: @order.OrderNumber</p>
+    <p>Customer Name: @order.CustomerName</p>
+    <p>Customer Address: @order.CustomerAddress</p>
+    <p>Date Created: @order.DateOrdered.ToShortDateString()</p>
+    <hr />
+</div>
+
+<hr />
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Produck SKU</th>
+            <th>Product Description</th>
+            <th>Qty</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@orderInfo.SKU</td>
+            <td>@orderInfo.ProductDescription</td>
+            <td>@Model.Qty</td>
+        </tr>
+    </tbody>
+</table>
+<hr />
+
+@using (Html.BeginForm("ChangeQty", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <h4 class="text-center">Please fill in the criteria below.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.OrderLineId)
+    @Html.HiddenFor(m => m.OrderId)
+    @Html.HiddenFor(m => m.ProductId)
+    @Html.HiddenFor(m => m.OldQty)
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Qty">Qty: </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Qty, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancel", "ViewOrder", "Home", new { id = Model.OrderId }, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </div>
+        </div>
+    </div>
+}
+

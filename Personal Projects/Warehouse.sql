@@ -240,13 +240,26 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES
 go
 
 create procedure GetOrderLine(
+	@OrderLineId int
+)
+as
+	select * from OrderLine
+	where OrderLineId = @OrderLineId
+go
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES
+	where ROUTINE_NAME = 'GetOrderLine2')
+		drop procedure GetOrderLine2
+go
+
+create procedure GetOrderLine2(
 	@OrderId int,
-	@ProductId int
+	@ProdId int
 )
 as
 	select * from OrderLine
 	where OrderId = @OrderId
-	and ProductId = @ProductId
+	and ProductId = @ProdId
 go
 
 if exists (select * from INFORMATION_SCHEMA.ROUTINES
@@ -444,8 +457,8 @@ else
 	insert into Inventory values(@ProductId, @ToBinId, @TransferAmount)
 go
 
-select * from Product
+select * from OrderLine
 
-update Bin
-set AvailableSpace = 200
-where BinId = 7
+update OrderLine
+set Qty = 7
+where OrderLineId = 17

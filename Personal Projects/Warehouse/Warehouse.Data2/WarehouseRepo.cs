@@ -271,15 +271,27 @@ namespace Warehouse.Data2
             }
         }
 
-        public OrderLine GetOrderLine(int orderId, int prodId)
+        public OrderLine GetOrderLine(int id)
         {
             using(var cn = new SqlConnection(connString))
             {
                 var parameters = new DynamicParameters();
-                parameters.Add("@OrderId", orderId);
-                parameters.Add("@ProductId", prodId);
+                parameters.Add("@OrderLineId", id);
 
                 return cn.QueryFirstOrDefault<OrderLine>("GetOrderLine", parameters, commandType: CommandType.StoredProcedure);
+
+            }
+        }
+
+        public OrderLine GetOrderLine(int orderId, int prodId)
+        {
+            using (var cn = new SqlConnection(connString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@OrderId", orderId);
+                parameters.Add("@ProdId", prodId);
+
+                return cn.QueryFirstOrDefault<OrderLine>("GetOrderLine2", parameters, commandType: CommandType.StoredProcedure);
 
             }
         }

@@ -12,6 +12,7 @@ namespace Warehouse.Data2
         public int OrderId { get; set; }
         public int ProductId { get; set; }
         public int Qty { get; set; }
+        public int OldQty { get; set; }
 
         private WarehouseRepo wr = new WarehouseRepo();
 

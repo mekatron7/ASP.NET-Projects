@@ -208,6 +208,8 @@
     <Content Include="Views\Home\AddToOrder.cshtml" />
     <Content Include="Views\Home\ViewOrder.cshtml" />
     <Content Include="Views\Home\DeleteOrderLine.cshtml" />
+    <Content Include="Views\Home\ChangeQty.cshtml" />
+    <Content Include="Views\Home\EditOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

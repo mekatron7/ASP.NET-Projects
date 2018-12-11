@@ -136,7 +136,6 @@ namespace Warehouse.Controllers
         {
             if (ModelState.IsValid)
             {
-                order.DateOrdered = DateTime.Now;
                 wr.EditOrder(order);
                 return View("GetOrders", wr.GetOrders());
             }
@@ -286,33 +285,97 @@ namespace Warehouse.Controllers
         }
 
         [HttpGet]
-        public ActionResult EditOrderLine(int orderId = 0, int prodId = 0)
+        public ActionResult ChangeQty(int id)
         {
-            return View(wr.GetOrderLine(orderId, prodId));
+            var ol = wr.GetOrderLine(id);
+            ol.OldQty = ol.Qty;
+            return View(ol);
         }
 
         [HttpPost]
-        public ActionResult EditOrderLine(OrderLine ol)
+        public ActionResult ChangeQty(OrderLine ol)
         {
             if (ModelState.IsValid)
             {
+                var qtyDiff = Math.Abs(ol.Qty - ol.OldQty);
+                bool addedQty = ol.Qty >= ol.OldQty;
+                if (ol.Qty <= 0)
+                {
+                    ModelState.AddModelError("", "The quantity must be greater than 0.");
+                    ol.Qty = ol.OldQty;
+                    return View(ol);
+                }
+                if(qtyDiff > ol.GetProductInfo().GetInvQuantity() && addedQty)
+                {
+                    ModelState.AddModelError("", "The order quantity can't exceed the quantity available in inventory.");
+                    ol.Qty = ol.OldQty;
+                    return View(ol);
+                }
+                
+                Bin bin;
+                
+                if (addedQty)
+                {
+                    var invList = wr.GetInventory(0, ol.ProductId, 0).OrderBy(i => i.GetBinInfo().AvailableSpace).ToList();
+                    int bininvPosition = 0;
+
+                    do
+                    {
+                        var currentBinInventory = invList[bininvPosition]; //Current inventory in list
+                        int amountToTake = qtyDiff > currentBinInventory.Qty ? currentBinInventory.Qty : qtyDiff; //Amount to take from bin
+                        currentBinInventory.Qty -= amountToTake; //Removes desired quantity
+                        qtyDiff -= amountToTake; //Subtracts amount taken from total quantity to be retrieved
+
+                        if (currentBinInventory.Qty == 0) //If inv qty becomes 0, delete inv. If not, edit inv.
+                        {
+                            wr.DeleteInventory(currentBinInventory.InventoryId, 0, 0);
+                        }
+                        else
+                        {
+                            wr.EditInventory(currentBinInventory);
+                        }
+                        bin = currentBinInventory.GetBinInfo(); //Gets the current bin being accessed
+                        bin.AvailableSpace += amountToTake * currentBinInventory.GetProductInfo().Size; //Sets the available space freed up in the bin
+                        wr.EditBin(bin); //Edits current bin
+                        bininvPosition++; //Moves to next bin
+                    }
+                    while (qtyDiff != 0);
+                }
+                else
+                {
+                    var spaceTaken = ol.GetProductInfo().Size * qtyDiff;
+                    var bins = wr.GetBins();
+                    bin = bins.FirstOrDefault(b => b.AvailableSpace == bins.Max(i => i.AvailableSpace));
+                    bin.AvailableSpace -= spaceTaken;
+                    var inv = wr.GetInventory(0, 0, bin.BinId).FirstOrDefault(i => i.ProductId == ol.ProductId);
+                    if(inv == null)
+                    {
+                        wr.AddInventory(new Inventory { BinId = bin.BinId, ProductId = ol.ProductId, Qty = qtyDiff });
+                    }
+                    else
+                    {
+                        inv.Qty += qtyDiff;
+                        wr.EditInventory(inv);
+                    }
+                    wr.EditBin(bin);
+                }
                 wr.EditOrderLine(ol);
-                View("GetOrders", wr.GetOrders());
+                return View("ViewOrder", ol.GetOrderInfo());
             }
 
             return View(ol);
         }
 
         [HttpGet]
-        public ActionResult GetOrderLine(int orderId = 0, int prodId = 0)
+        public ActionResult GetOrderLine(int id)
         {
-            return View(wr.GetOrderLine(orderId, prodId));
+            return View(wr.GetOrderLine(id));
         }
 
         [HttpGet]
-        public ActionResult DeleteOrderLine(int orderId = 0, int prodId = 0)
+        public ActionResult DeleteOrderLine(int id)
         {
-            return View(wr.GetOrderLine(orderId, prodId));
+            return View(wr.GetOrderLine(id));
         }
 
         [HttpPost]
@@ -324,7 +387,7 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "This order line can't be deleted because there's no space available in the bins.\nCreate a new bin with sufficient space.");
                 return View(ol);
             }
-            
+            if (wr.GetOrderLines(ol.OrderId).Count == 0) return RedirectToAction("GetOrders");
             return View("ViewOrder", order);
         }
 
@@ -580,7 +643,17 @@ namespace Warehouse.Controllers
                 }
                 while (qtyToGet != 0); //If qtyToGet hasn't been reached yet, go to next bin and retrieve inventory
 
-                wr.AddOrderLine(new OrderLine { OrderId = orderLine.OrderNum, ProductId = orderLine.Prod.ProductId, Qty = orderLine.Qty });
+                var ol = wr.GetOrderLine(orderLine.OrderNum, orderLine.ProdId);
+                if (ol == null)
+                {
+                    wr.AddOrderLine(new OrderLine { OrderId = orderLine.OrderNum, ProductId = orderLine.Prod.ProductId, Qty = orderLine.Qty });
+                }
+                else
+                {
+                    ol.Qty += orderLine.Qty;
+                    wr.EditOrderLine(ol);
+                }
+                
                 return RedirectToAction("GetProducts");
             }
 
@@ -596,11 +669,12 @@ namespace Warehouse.Controllers
 
         public bool DeleteOrderLineBinInv(OrderLine ol)
         {
-            bool success = false;
+            bool success = true;
             var binToReturnInv = wr.GetBins().OrderByDescending(b => b.AvailableSpace).ToList()[0];
             var spaceTaken = ol.Qty * ol.GetProductInfo().Size;
             if (binToReturnInv.AvailableSpace < spaceTaken)
             {
+                success = false;
                 return success;
             }
             var invList = wr.GetInventory(0, ol.ProductId, 0);
