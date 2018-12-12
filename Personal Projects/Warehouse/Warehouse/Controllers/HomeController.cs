@@ -64,11 +64,6 @@ namespace Warehouse.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (prod.Size <= 0)
-                {
-                    ModelState.AddModelError("", "You can't have a zero size. That makes no damn sense.");
-                    return View(prod);
-                }
                 wr.EditProduct(prod);
                 return View("GetProducts", wr.GetProducts());
             }

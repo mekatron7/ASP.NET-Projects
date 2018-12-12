@@ -26,7 +26,7 @@ namespace Warehouse.Models
                 Products.Add(new SelectListItem { Text = $"{prod.SKU} | {prod.ProductDescription}", Value = prod.ProductId.ToString() });
             }
 
-            foreach (var bin in wr.GetBins())
+            foreach (var bin in wr.GetBins().Where(b => b.AvailableSpace != 0))
             {
                 Bins.Add(new SelectListItem { Text = bin.BinName, Value = bin.BinId.ToString() });
             }
