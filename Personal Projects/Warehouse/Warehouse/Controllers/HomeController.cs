@@ -194,11 +194,19 @@ namespace Warehouse.Controllers
             {
                 try
                 {
+                    if(bin.Capacity <= 0)
+                    {
+                        ModelState.AddModelError("", "The bin capacity must be greater than 0.");
+                        return View(bin);
+                    }
                     wr.AddBin(bin);
                 }
                 catch(Exception ex)
                 {
-
+                    if(ex.Message.Contains("Violation of UNIQUE KEY constraint"))
+                    ModelState.AddModelError("", $"A bin with the name '{bin.BinName}' already exists. Please pick a different name.");
+                    else ModelState.AddModelError("", $"Source: {ex.Source} | Message: {ex.Message}");
+                    return View(bin);
                 }
                 return View("GetBins", wr.GetBins());
             }
@@ -420,7 +428,7 @@ namespace Warehouse.Controllers
                     return View(inv);
                 }
 
-                var getInv = wr.GetInventory(0, inv.ProductId, inv.BinId).FirstOrDefault(i => i.ProductId == inv.ProductId && i.BinId == inv.BinId);
+                var getInv = wr.GetInventory(0, 0, inv.BinId).FirstOrDefault(i => i.ProductId == inv.ProductId);
                 if (getInv == null)
                 {
                     wr.AddInventory(new Inventory
@@ -502,7 +510,7 @@ namespace Warehouse.Controllers
         [HttpGet]
         public ActionResult TransferInventory(int invId)
         {
-            var inv = wr.GetInventory(invId, 0, 0)[0];
+            var inv = wr.GetInventory(invId, 0, 0).First();
             var invVM = new InventoryVM
             {
                 InventoryId = inv.InventoryId,
@@ -546,7 +554,7 @@ namespace Warehouse.Controllers
                 BinId = inv.BinId,
                 Qty = inv.Qty
             };
-            var toInv = wr.GetInventory(0, inv.ProductId, inv.BinId).Where(i => i.ProductId == inv.ProductId && i.BinId == inv.BinId).ToList();
+            var toInv = wr.GetInventory(0, 0, inv.BinId).Where(i => i.ProductId == inv.ProductId).ToList();
             if(toInv.Count == 0)
             {
                 wr.TransferInventory(transferInvInfo, inv.OldBinId, 0);

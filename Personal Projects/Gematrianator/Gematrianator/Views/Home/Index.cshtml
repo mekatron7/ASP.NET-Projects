@@ -1,0 +1,118 @@
+﻿@model Gematrianator.Models.GematrianatorVM
+
+@{
+    ViewBag.Title = "Home Page";
+    var wr = new Gematrianator.Data.WordsRepo();
+    var ciphers = wr.GetAllCiphers();
+    ciphers = new List<Gematrianator.Data.Cipher> { ciphers.First(c => c.CipherID == "EO"), ciphers.First(c => c.CipherID == "REO"),
+    ciphers.First(c => c.CipherID == "EFR"), ciphers.First(c => c.CipherID == "REFR"), };
+}
+
+<div class="jumbotron">
+    <h1>Gematrianator</h1>
+    <p class="lead">Learn the code, see through everything.</p>
+    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<div class="row">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <h4 class="text-center">Enter a word, phrase, or a number.</h4>
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="col-md-offset-2">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="UserInput">Words or number: </label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.UserInput, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="EnglishOrdinal">English Ordinal: </label>
+                <div class="col-md-1">
+                    @Html.CheckBoxFor(m => m.EnglishOrdinal, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="ReverseEnglishOrdinal">Reverse English Ordinal: </label>
+                <div class="col-md-1">
+                    @Html.CheckBoxFor(m => m.ReverseEnglishOrdinal, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="EnglishFullReduction">English Full Reduction: </label>
+                <div class="col-md-1">
+                    @Html.CheckBoxFor(m => m.EnglishFullReduction, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="ReverseEnglishFullReduction">Reverse English Full Reduction: </label>
+                <div class="col-md-1">
+                    @Html.CheckBoxFor(m => m.ReverseEnglishFullReduction, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-10">
+                    <input type="submit" class="btn btn-primary col-md-2" value="Decode" />
+                    @if (!Model.UserInput.IsEmpty() && !(Model.UserInput.IsInt() || Model.UserInput.IsDecimal()))
+                    {
+                        @Html.ActionLink("Delete Word", "DeleteWord", new { word = Model.UserInput }, new { @class = "btn btn-danger" });
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="row" style="height:100px">
+    @foreach (var cipher in ciphers)
+    {
+        <div class="col-md-3 text-center">
+            <h3>@cipher.CipherName</h3>
+            <br />
+            @if(cipher.CipherID == "EO") { <h4>@Model.EnglishOrdinalNum</h4> }
+            else if(cipher.CipherID == "REO") { <h4>@Model.ReverseEnglishOrdinalNum</h4> }
+            else if(cipher.CipherID == "EFR") { <h4>@Model.EnglishFullReductionNum</h4> }
+            else if(cipher.CipherID == "REFR") { <h4>@Model.ReverseEnglishFullReductionNum</h4> }
+        </div>
+    }
+</div>
+@if (Model.DecodedWords != null)
+{
+    var cipherValues = new List<Gematrianator.Models.WordCipherInfo>();
+    foreach (var cipher in ciphers)
+    {
+        cipherValues.Add(new Gematrianator.Models.WordCipherInfo { CipherID = cipher.CipherID, CipherName = cipher.CipherName });
+    }
+    <div class="row">
+        Decoded Words with gematria of @Model.UserInput:
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Word/Phrase</th>
+                    @foreach(var cipher in ciphers)
+                    {
+                        <th>@cipher.CipherName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var word in Model.DecodedWords.Select(w => w.WordText).Distinct())
+                {
+                    var num = int.Parse(Model.UserInput);
+                    foreach(var cipher in cipherValues)
+                    {
+                        cipher.CipherValue = Model.DecodedWords.FirstOrDefault(w => w.WordText == word && w.CipherID == cipher.CipherID).CipherValue;
+                    }
+                <tr>
+                    <td>@word</td>
+                    @foreach(var cipher in cipherValues)
+                    {
+                        if(num == cipher.CipherValue) { <td style="color:green"><i>@cipher.CipherValue</i></td> }
+                    else { <td>@cipher.CipherValue</td> }
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

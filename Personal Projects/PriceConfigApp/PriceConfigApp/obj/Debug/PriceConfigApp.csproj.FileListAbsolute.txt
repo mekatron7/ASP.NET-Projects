@@ -18,9 +18,10 @@ C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceCo
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\bin\System.Web.Webpages.Razor.xml
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\bin\System.Web.Helpers.xml
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\bin\System.Web.Mvc.xml
-C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\obj\Debug\PriceConfigApp.csprojResolveAssemblyReference.cache
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\obj\Debug\PriceConfigApp.csproj.CoreCompileInputs.cache
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\obj\Debug\PriceConfigApp.dll
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\obj\Debug\PriceConfigApp.pdb
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\bin\PriceConfig.Data.dll
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\bin\PriceConfig.Data.pdb
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\obj\Debug\PriceConfigApp.csprojAssemblyReference.cache
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfigApp\obj\Debug\PriceConfigApp.csproj.CopyComplete

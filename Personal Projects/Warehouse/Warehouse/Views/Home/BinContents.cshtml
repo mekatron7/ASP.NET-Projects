@@ -39,7 +39,8 @@ else
             </div>
         }
     </div>
-    <a class="btn btn-default" href='javascript:history.go(-1)'>Back</a>
+    //<a class="btn btn-default" href='javascript:history.go(-1)'>Back</a>
+    @Html.ActionLink("View Bins", "GetBins", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("View Inventory", "GetAllInventory", null, new { @class = "btn btn-default" })
 }
-
 

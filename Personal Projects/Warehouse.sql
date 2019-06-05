@@ -459,6 +459,6 @@ go
 
 select * from OrderLine
 
-update OrderLine
-set Qty = 7
-where OrderLineId = 17
+update Bin
+set AvailableSpace = 100
+where BinId = 16

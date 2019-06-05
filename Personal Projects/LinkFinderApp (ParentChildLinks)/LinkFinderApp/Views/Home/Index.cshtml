@@ -4,7 +4,9 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Link Fetcher</h2>
+<br />
+<hr />
 
 @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
@@ -12,44 +14,44 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="col-md-2 control-label" for="m">URL:</label>
-                <div class="col-md-10">
+                <label class="col-md-3 control-label" for="m">URL:</label>
+                <div class="col-md-9">
                     @Html.TextBoxFor(m => m.URL, new { @class = "form-control", type = "url" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-2 control-label" for="NumOfLevels"># of Levels:</label>
-                <div class="col-md-10">
+                <label class="col-md-3 control-label" for="NumOfLevels"># of Levels:</label>
+                <div class="col-md-2">
                     @Html.TextBoxFor(m => m.NumOfLevels, new { @class = "form-control", type = "number", min = "1", max = "5" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-2 control-label" for="NumOfLinks"># of Links:</label>
-                <div class="col-md-10">
+                <label class="col-md-3 control-label" for="NumOfLinks"># of Links:</label>
+                <div class="col-md-2">
                     @Html.TextBoxFor(m => m.NumOfLinks, new { @class = "form-control", type = "number", min = "1", max = "20" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-2 control-label" for="StartAtLinkNum">Start at link #:</label>
-                <div class="col-md-10">
+                <label class="col-md-3 control-label" for="StartAtLinkNum">Start at link #:</label>
+                <div class="col-md-2">
                     @Html.TextBoxFor(m => m.StartAtLinkNum, new { @class = "form-control", type = "number", min = "1", max = "50" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-2 control-label" for="AllLinksFromFirstPage">Do all links from first page:</label>
-                <div class="col-md-10">
+                <label class="col-md-3 control-label" for="AllLinksFromFirstPage">Do all links from first page:</label>
+                <div class="col-md-2">
                     @Html.CheckBoxFor(m => m.AllLinksFromFirstPage, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-2 control-label" for="KeepLinkStyles">Keep Link Styles:</label>
-                <div class="col-md-10">
+                <label class="col-md-3 control-label" for="KeepLinkStyles">Keep Link Styles:</label>
+                <div class="col-md-2">
                     @Html.CheckBoxFor(m => m.KeepLinkStyles, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-2 control-label" for="NoDuplicateSites">No Duplicate Sites:</label>
-                <div class="col-md-10">
+                <label class="col-md-3 control-label" for="NoDuplicateSites">No Duplicate Sites:</label>
+                <div class="col-md-2">
                     @Html.CheckBoxFor(m => m.NoDuplicateSites, new { @class = "form-control" })
                 </div>
             </div>
@@ -71,8 +73,11 @@
     }
 }
 
-<h2>Links from "@Model.URL":</h2>
-<p>Number of Links: @Model.LinksTotal</p>
+@if (!string.IsNullOrEmpty(Model.URL))
+{
+    <h2>Links from "@Model.URL":</h2>
+    <p>Number of Links: @Model.LinksTotal</p>
+}
 
 @foreach (var link in Model.Links)
 {
@@ -145,8 +150,11 @@
 
 }
 
-<h1>Website content:</h1>
-<p>@Model.Content</p>
+@if (!string.IsNullOrEmpty(Model.Content))
+{
+    <h1>Website content:</h1>
+    <p>@Model.Content</p>
+}
 
 @section Scripts
 {

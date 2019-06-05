@@ -2,7 +2,8 @@ C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceCo
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfig.Data\bin\Debug\PriceConfig.Data.pdb
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfig.Data\bin\Debug\Dapper.dll
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfig.Data\bin\Debug\Dapper.xml
-C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfig.Data\obj\Debug\PriceConfig.Data.csprojResolveAssemblyReference.cache
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfig.Data\obj\Debug\PriceConfig.Data.csproj.CoreCompileInputs.cache
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfig.Data\obj\Debug\PriceConfig.Data.dll
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfig.Data\obj\Debug\PriceConfig.Data.pdb
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfig.Data\obj\Debug\PriceConfig.Data.csprojAssemblyReference.cache
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\PriceConfigApp\PriceConfig.Data\obj\Debug\PriceConfig.Data.csproj.CopyComplete
