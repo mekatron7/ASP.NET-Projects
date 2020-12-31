@@ -1,0 +1,597 @@
+﻿@model ChromebookManager.Models.Admin.SysDataVM
+
+    @{
+        ViewBag.Title = "System Data";
+    }
+
+    <h2>System Data</h2>
+    @if (Model.Alert != null && !string.IsNullOrEmpty(Model.Alert.AlertMessage))
+            {
+                <div class="alert @Model.Alert.AlertType alert-dismissible fade show" role="alert">
+                    <strong>@Model.Alert.AlertTitle</strong> @Model.Alert.AlertMessage
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+            <br />
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="brands-tab" data-toggle="tab" href="#brands" role="tab" aria-controls="brands" aria-selected="true">Brands</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="models-tab" data-toggle="tab" href="#models" role="tab" aria-controls="models" aria-selected="false">Models</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="parts-tab" data-toggle="tab" href="#parts" role="tab" aria-controls="parts" aria-selected="false">Parts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="model-parts-tab" data-toggle="tab" href="#model-parts" role="tab" aria-controls="model-parts" aria-selected="false">Model Parts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="issue-types-tab" data-toggle="tab" href="#issue-types" role="tab" aria-controls="issue-types" aria-selected="false">Issue Types</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="brands" role="tabpanel" aria-labelledby="brands-tab">
+            <br />
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBrand">Add Brand</button>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Brand Name</th>
+                        <th># of Models</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var brand in Model.Brands)
+                    {
+                        <tr data-toggle="tooltip" title="Added by @brand.AddedBy on @brand.DateAdded.ToShortDateString()" data-placement="top">
+                            <td>@brand.BrandName</td>
+                            <td>@Model.Models.Count(m => m.BrandName == brand.BrandName)</td>
+                            <td class="text-right">
+                                @if (!Model.Models.Any(m => m.BrandId == brand.BrandId))
+                                {
+                                    using (Html.BeginForm("DeleteBrand", "Admin", FormMethod.Post))
+                                    {
+                                        @Html.Hidden("brandIdDelete", brand.BrandId)
+                                        <button style="color:red" class="btn btn-outline-secondary" onclick="return confirm('Are you sure you want to delete this brand?');">Delete</button>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div id="addBrand" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addBrandTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="addBrandTitle">Add New Brand</h3>
+                        </div>
+                        @using (Html.BeginForm("CreateBrand", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="brandName">Brand Name: </label>
+                                    <div class="col-md-8">
+                                        <input id="brandName" name="brandName" class="form-control" type="text" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div id="editBrand" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editBrandTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="editBrandTitle">Edit Brand</h3>
+                        </div>
+                        @using (Html.BeginForm("EditBrand", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.HiddenFor(m => m.BrandId, new { id = "brandIdEdit" })
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="brandNameEdit">Brand Name: </label>
+                                    <div class="col-md-8">
+                                        <input id="brandNameEdit" name="brandNameEdit" class="form-control" type="text" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="models" role="tabpanel" aria-labelledby="models-tab">
+            <br />
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModel">Add Model</button>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Brand Name</th>
+                        <th>Model Number</th>
+                        <th>Cost</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var theModel in Model.Models)
+                    {
+                        <tr data-toggle="tooltip" title="Added by @theModel.AddedBy on @theModel.DateAdded.ToShortDateString()" data-placement="top">
+                            <td class="brandName">@theModel.BrandName</td>
+                            <td class="modelNumber">@theModel.ModelNumber</td>
+                            <td class="cost">@string.Format("{0:c}", theModel.Cost)</td>
+                            <td class="text-right"><button type="button" class="btn btn-outline-secondary editModelCost" data-toggle="modal" data-target="#editModelCost" value="@theModel.ModelId">Edit Cost</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div id="addModel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addModelTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="addModelTitle">Add New Model</h3>
+                        </div>
+                        @using (Html.BeginForm("CreateModel", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="BrandId">Brand Name: </label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownListFor(m => m.BrandId, Model.BrandSelectList, "- Select a Brand -", new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="ModelNumber">Model Number: </label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(m => m.ModelNumber, new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="Cost">Cost: </label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(m => m.Cost, new { @class = "form-control", type = "number", step = "0.01", min = "0.01", required = "required", id = "modelCost" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div id="editModelCost" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editModelCostTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="editModelCostTitle">Edit Model Cost</h3>
+                        </div>
+                        @using (Html.BeginForm("EditModelCost", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.HiddenFor(m => m.ModelId, new { id = "costModelId" })
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <p id="editCostInstructions"></p>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="Cost">Cost: </label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(m => m.Cost, new { @class = "form-control", type = "number", step = "0.01", min = "0.01", required = "required", id = "modelCostEdit" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="parts" role="tabpanel" aria-labelledby="parts-tab">
+            <br />
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPart">Add Part</button>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Part Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var part in Model.Parts)
+                    {
+                        <tr data-toggle="tooltip" title="Added by @part.AddedBy on @part.DateAdded.ToShortDateString()" data-placement="top">
+                            <td>@part.PartName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div id="addPart" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPartTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="addPartTitle">Add New Part</h3>
+                        </div>
+                        @using (Html.BeginForm("CreatePart", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="partName">Part Name: </label>
+                                    <div class="col-md-8">
+                                        <input id="partName" name="partName" class="form-control" type="text" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="model-parts" role="tabpanel" aria-labelledby="model-parts-tab">
+            <br />
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModelPart">Add Model Part</button>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Part Name</th>
+                        <th>Cost</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var modelPart in Model.ModelParts)
+                    {
+                        <tr data-toggle="tooltip" title="Last modified by @modelPart.AddedBy on @modelPart.DateAdded" data-placement="top">
+                            <td class="brandModel">@modelPart.BrandName @modelPart.ModelNumber</td>
+                            <td class="partName">@modelPart.PartName</td>
+                            <td class="cost">@string.Format("{0:c}", modelPart.Cost)</td>
+                            <td class="mpCostId" hidden>@modelPart.MPCostId</td>
+                            <td class="text-right">
+                                <button type="button" class="btn btn-outline-secondary editModelPart" data-toggle="modal" data-target="#editModelPart" value="@modelPart.ModelPartId">Edit Cost</button>
+                                <button type="button" class="btn btn-outline-info costHistory" data-toggle="modal" data-target="#costHistory" value="@modelPart.ModelPartId">Cost History</button>
+                                <button type="button" class="btn btn-outline-success addToPO" data-toggle="modal" data-target="#addToPO" value="@modelPart.ModelPartId">Purchase Order</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div id="addModelPart" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addModelPartTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="addModelPartTitle">Add New Model Part</h3>
+                        </div>
+                        @using (Html.BeginForm("CreateModelPart", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="ModelId">Model: </label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownListFor(m => m.ModelId, Model.ModelSelectList, "- Select a Model -", new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="PartId">Part: </label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownListFor(m => m.PartId, Model.PartSelectList, "- Select a Part -", new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="Cost">Cost: </label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(m => m.Cost, new { @class = "form-control", type = "number", step = "0.01", min = "0.01", required = "required" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div id="editModelPart" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editModelPartTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="editModelPartTitle">Edit Model Part Cost</h3>
+                        </div>
+                        @using (Html.BeginForm("EditModelPart", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.HiddenFor(m => m.ModelPartId)
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <p id="editInstructions"></p>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="Cost">Cost: </label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(m => m.Cost, new { @class = "form-control", type = "number", step = "0.01", min = "0.01", required = "required", id = "costEdit" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div id="addToPO" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addToPOTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="addToPOTitle"></h3>
+                        </div>
+                        @using (Html.BeginForm("AddPurchaseOrder", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.HiddenFor(m => m.ModelPartId, new { id = "POModelPartId" })
+                                @Html.HiddenFor(m => m.MPCostId)
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <p id="POInstructions"></p>
+                                <p>Part name: <b><span id="partNameField"></span></b></p>
+                                <p>Unit cost: <b><span id="unitCostField"></span></b></p>
+                                <div id="PODropdown" class="form-group">
+                                    <label class="col-md-4 control-label" for="SelectedPONumber">Purchase Order: </label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownListFor(m => m.SelectedPONumber, Model.PurchaseOrders, "- Select a Purchase Order -", new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div id="POTextbox" class="form-group">
+                                    <label class="col-md-4 control-label" for="PONumber">PO Number: </label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(m => m.PONumber, new { @class = "form-control", type = "number", min = "1", max = "9999999999", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="Qty">Qty: </label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(m => m.Qty, new { @class = "form-control", type = "number", min = "1", required = "required" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" id="btnNewOrExisting" class="btn btn-outline-dark">Add to Existing PO</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div id="costHistory" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="costHistoryTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div id="costHistoryData">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="issue-types" role="tabpanel" aria-labelledby="issue-types-tab">
+            <br />
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addIssueType">Add Issue Type</button>
+            @if (Model.IssueTypes.Count > 0)
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th width="200px">Issue Type</th>
+                            <th>Issue Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var issue in Model.IssueTypes)
+                        {
+                            <tr data-toggle="tooltip" title="Added by @issue.AddedBy on @issue.DateAdded.ToShortDateString()" data-placement="top">
+                                <td class="issueType">@issue.IssueName</td>
+                                <td class="issueDescription">@issue.IssueDescription</td>
+                                <td class="text-right"><button type="button" class="btn btn-outline-secondary editIssue" data-toggle="modal" data-target="#editIssueType" value="@issue.IssueId">Edit</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-center">There are no issue types saved to the system. Click the 'Add Issue Type' button to add one.</p>
+            }
+
+            <div id="addIssueType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addIssueTypeTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="addIssueTypeTitle">Add New Issue Type</h3>
+                        </div>
+                        @using (Html.BeginForm("CreateIssueType", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="issueType">Issue Type: </label>
+                                    <div class="col-md-8">
+                                        <input id="issueType" name="issueType" class="form-control" type="text" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="issueDescription">Issue Description: </label>
+                                    <div class="col-md-8">
+                                        <textarea class="form-control" cols="25" id="issueDescription" name="issueDescription" rows="2" style="height: 120px" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div id="editIssueType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editIssueTypeTitle" aria-hidden="true" style="display:none">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="editIssueTypeTitle">Edit Issue Type</h3>
+                        </div>
+                        @using (Html.BeginForm("EditIssueType", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <div class="modal-body">
+                                @Html.HiddenFor(m => m.IssueId)
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="issueType">Issue Type: </label>
+                                    <div class="col-md-8">
+                                        <input id="issueTypeEdit" name="issueType" class="form-control" type="text" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="issueDescription">Issue Description: </label>
+                                    <div class="col-md-8">
+                                        <textarea class="form-control" cols="25" id="issueDescriptionEdit" name="issueDescription" rows="2" style="height: 120px" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var createPOInstructions = 'Please fill in the fields below.'
+            var addToPOInstructions = 'Please select a purchase order from the dropdown list below.'
+
+            $('.editBrand').click(function () {
+                var id = $(this).val()
+                $('#brandIdEdit').val(id)
+                $('#brandNameEdit').val($('#brandName' + id).text())
+            })
+
+            $('.editModelCost').click(function () {
+                var currentRow = $(this).closest('tr')
+                var brandName = currentRow.find('.brandName').text()
+                var modelNumber = currentRow.find('.modelNumber').text()
+                var cost = currentRow.find('.cost').text().slice(1)
+                $('#costModelId').val($(this).val())
+                $('#editCostInstructions').text('Edit the cost for ' + brandName + ' ' + modelNumber + '.')
+                $('#modelCostEdit').val(cost)
+            })
+
+            $('.editModelPart').click(function () {
+                var currentRow = $(this).closest('tr')
+                var brandModel = currentRow.find('.brandModel').text()
+                var partName = currentRow.find('.partName').text()
+                var cost = currentRow.find('.cost').text().slice(1)
+                $('#ModelPartId').val($(this).val())
+                $('#editInstructions').text('Edit the cost for ' + brandModel + ' ' + partName + '.')
+                $('#costEdit').val(cost)
+            })
+
+            $('.editIssue').click(function () {
+                var currentRow = $(this).closest('tr')
+                var issueType = currentRow.find('.issueType').text()
+                var issueDescription = currentRow.find('.issueDescription').text()
+                $('#IssueId').val($(this).val())
+                $('#issueTypeEdit').val(issueType)
+                $('#issueDescriptionEdit').val(issueDescription)
+            })
+
+            $('.addToPO').click(function () {
+                var currentRow = $(this).closest('tr')
+                var modelName = currentRow.find('.brandModel').text()
+                var partName = currentRow.find('.partName').text()
+                var part = modelName + ' ' + partName
+                var cost = currentRow.find('.cost').text()
+                var mpCostId = currentRow.find('.mpCostId').text()
+                $('#POModelPartId').val($(this).val())
+                $('#MPCostId').val(mpCostId)
+                $('#addToPOTitle').text('Create New Purchase Order')
+                $('#POInstructions').text(createPOInstructions)
+                $('#partNameField').text(part)
+                $('#unitCostField').text(cost)
+                $('#PODropdown *').prop('disabled', true)
+                $('#PODropdown').hide()
+                $('#POTextbox *').prop('disabled', false)
+                $('#POTextbox').show()
+            })
+
+            $('#btnNewOrExisting').click(function () {
+                var PODropdown = $('#PODropdown')
+                var POTextbox = $('#POTextbox')
+                if (PODropdown.is(':hidden')) {
+                    PODropdown.show()
+                    $('#PODropdown *').prop('disabled', false)
+                    $('#POTextbox *').prop('disabled', true)
+                    POTextbox.hide()
+                    $(this).text('New Purchase Order')
+                    $('#addToPOTitle').text('Add To Existing Purchase Order')
+                    $('#POInstructions').text(addToPOInstructions)
+                }
+                else {
+                    $('#PODropdown *').prop('disabled', true)
+                    PODropdown.hide()
+                    POTextbox.show()
+                    $('#POTextbox *').prop('disabled', false)
+                    $(this).text('Add to Existing PO')
+                    $('#addToPOTitle').text('Create New Purchase Order')
+                    $('#POInstructions').text(createPOInstructions)
+                }
+            })
+
+            $('.costHistory').click(function () {
+                var mpId = $(this).val()
+                $.get('@Url.Action("LoadMPCostHistoryTable", "Admin")?mpId=' + mpId
+                ).done(function (data) {
+                    var costHistoryDiv = $('#costHistoryData')
+                    costHistoryDiv.empty()
+                    costHistoryDiv.append(data)
+                })
+            })
+        })
+    </script>
+}

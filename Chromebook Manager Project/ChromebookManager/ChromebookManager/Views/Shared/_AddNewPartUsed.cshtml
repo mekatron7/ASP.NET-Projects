@@ -1,0 +1,16 @@
+﻿@model ChromebookManager.Models.Home.AddNewPartUsedVM
+
+@if (!Model.PartChosen)
+{
+    <text>No part chosen</text>
+}
+else if (Model.InventoryList.Count > 0)
+{
+    var partUsedNum = Model.Index + 1;
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="RepairLog_RepairNotes">Part Used #@partUsedNum: </label>
+        <div class="col-md-8">
+            @Html.DropDownListFor(m => m.AddedPartsUsed, Model.InventoryList, "- Select a Part -", new { @class = "form-control", required = "required", id = $"PartsList{Model.Index}" })
+        </div>
+    </div>
+}

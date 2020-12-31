@@ -1,0 +1,230 @@
+﻿@model ChromebookManager.Models.Home.ClientProfileVM
+
+@{
+    ViewBag.Title = "Client Profile";
+    var statusClass = "";
+    var status = "";
+    var damageCount = Model.RepairLogs.Count(r => r.IssueName.ToLower().Contains("damage"));
+    if(damageCount > 1)
+    {
+        statusClass = "bg-danger text-white";
+        status = $"{damageCount} requests involving damage.";
+    }
+    else if(Model.RepairLogs.All(r => r.RepairReturnedDate.HasValue))
+    {
+        statusClass = "bg-success text-white";
+        status = "All repairs processed!";
+    }
+    else if(Model.RepairLogs.Any(r => !r.RepairReturnedDate.HasValue))
+    {
+        statusClass = "bg-primary text-white";
+        var repairCount = Model.RepairLogs.Count(r => !r.RepairReturnedDate.HasValue);
+        var sAtEnd = repairCount > 1 ? "s" : "";
+        status = $"{repairCount} pending request{sAtEnd}.";
+    }
+}
+
+<h2>Client Profile</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header text-center">
+                <h5>General Info</h5>
+            </div>
+            <div class="card-body border-bottom">
+                <h5 class="card-title">@Model.ClientInfo.FirstName @Model.ClientInfo.LastName</h5>
+                <p class="card-text">@Model.ClientInfo.SchoolName</p>
+                <p>
+                    @Model.ClientInfo.Username<br />
+                    Student #: @Model.ClientInfo.StudentNumber<br />
+                    Grade: @Model.ClientInfo.Grade
+                </p>
+                @Html.ActionLink("New Repair Request", "RepairRequest", "Home", new { userName = Model.ClientInfo.Username }, new { @class = "btn btn-primary" })
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Total # of requests: @Model.RepairLogs.Count<br />
+                    # of devices owned: @Model.Devices.Count
+                </li>
+                <li class="list-group-item text-success">Insurance fully paid</li>
+            </ul>
+            <div class="card-footer @statusClass">
+                @status
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-repairs-tab" data-toggle="tab" href="#nav-repairs" role="tab" aria-controls="nav-repairs" aria-selected="true">Repairs</a>
+                <a class="nav-item nav-link" id="nav-devices-tab" data-toggle="tab" href="#nav-devices" role="tab" aria-controls="nav-devices" aria-selected="false">Devices</a>
+                <a class="nav-item nav-link" id="nav-stats-tab" data-toggle="tab" href="#nav-stats" role="tab" aria-controls="nav-stats" aria-selected="false">Stats</a>
+                @Html.ActionLink("Back", "Clients", "Home", null, new { @class = "btn btn-light ml-auto" })
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-repairs" role="tabpanel" aria-labelledby="nav-repairs-tab">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Barcode</th>
+                            <th>Issue Type</th>
+                            <th>Description</th>
+                            <th>Returned</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var entry in Model.RepairLogs)
+                        {
+                            var device = Model.Devices.First(d => d.Barcode == entry.Barcode);
+                            <tr data-toggle="tooltip" title="Added by @entry.AddedBy on @entry.RepairTimestamp" data-placement="top">
+                                <td width="110px">@device.BrandName @device.ModelNumber</td>
+                                <td>@entry.Barcode</td>
+                                <td>@entry.IssueName</td>
+                                <td>@entry.IssueDescription</td>
+                                @if (entry.RepairReturnedDate.HasValue)
+                                {
+                                    <td>@entry.RepairReturnedDate.Value.ToShortDateString()</td>
+                                }
+                                else
+                                {
+                                    <td style="color:orange">In progress</td>
+                                }
+                                <td>@Html.ActionLink("Details", "RepairDetails", "Home", new { id = entry.RepairId }, new { @class = "btn btn-outline-dark" })</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="nav-devices" role="tabpanel" aria-labelledby="nav-devices-tab">
+                <br />
+                <div class="row">
+                    @foreach (var device in Model.Devices)
+                    {
+                        var totalRepairCosts = Model.PartsUsed.Where(p => Model.RepairLogs.Where(r => r.Barcode == device.Barcode)
+                                                       .Select(r => r.RepairId).Contains(p.RepairId));
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header text-center">@device.BrandName @device.ModelNumber</div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        Barcode: @device.Barcode<br />
+                                        Serial #: @device.SerialNumber<br />
+                                        Storage Space: @device.StorageCapacity
+                                    </li>
+                                    <li class="list-group-item">
+                                        Date Issued: @device.StartDate.Value.ToShortDateString()
+                                        @if (device.EndDate.HasValue)
+                                        {
+                                            <br />
+                                            <text>Date Returned: @device.EndDate.Value.ToShortDateString()</text>
+                                        }
+                                    </li>
+                                    <li class="list-group-item text-info">
+                                        # of repairs: @Model.RepairLogs.Where(r => r.Barcode == device.Barcode).Count()<br />
+                                        Total repair costs: @string.Format("{0:c}", totalRepairCosts.Where(p => !p.Recycled).Sum(p => p.Cost))
+                                    </li>
+                                    @{ var deviceRepairs = Model.RepairLogs.Where(r => r.Barcode == device.Barcode); }
+                                    @if(deviceRepairs.Any(d => !d.RepairReturnedDate.HasValue && d.IssueName.ToLower().Contains("damage")))
+                                    {
+                                        statusClass = "text-danger";
+                                        status = "Damaged. In progress.";
+                                    }
+                                    else if(deviceRepairs.Any(d => !d.RepairReturnedDate.HasValue))
+                                    {
+                                        statusClass = "text-warning";
+                                        status = "Currently in progress.";
+                                    }
+                                    else
+                                    {
+                                        statusClass = "text-success";
+                                        status = "In student possession.";
+                                    }
+                                    <li class="list-group-item @statusClass">
+                                        @status
+                                    </li>
+                                    @if (device.Loaner)
+                                    {
+                                        <li class="list-group-item text-warning">
+                                            Loaner device
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-stats" role="tabpanel" aria-labelledby="nav-stats-tab">
+                @{
+                    var partsUsedByRepair = Model.PartsUsed.GroupBy(p => p.RepairId);
+                    var completedRepairs = Model.RepairLogs.Where(r => r.RepairReturnedDate.HasValue);
+                    var avgRepairCost = Model.PartsUsed.Count > 0 ? partsUsedByRepair.Average(p => p.Sum(pu => pu.Cost)) : 0;
+                    var maxRepairCost = partsUsedByRepair.Count() > 0 ? partsUsedByRepair.Max(p => p.Sum(pu => pu.Cost)) : 0;
+                    var minRepairCost = partsUsedByRepair.Count() > 0 ? partsUsedByRepair.Min(p => p.Sum(pu => pu.Cost)) : 0;
+                    var avgRepairTime = completedRepairs.Count() > 0 ? completedRepairs.Average(r => r.RepairReturnedDate.Value.Subtract(r.RepairTimestamp).Days) : 0;
+                }
+                <table class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <td>Total Repair Costs</td>
+                            <td>@string.Format("{0:c}", Model.PartsUsed.Sum(p => p.Cost))</td>
+                        </tr>
+                        <tr>
+                            <td>Savings From Recycled Parts</td>
+                            <td>@string.Format("{0:c}", Model.PartsUsed.Where(p => p.Recycled).Sum(p => p.Cost))</td>
+                        </tr>
+                        <tr>
+                            <td>Total Repair Costs After Savings</td>
+                            <td>@string.Format("{0:c}", Model.PartsUsed.Sum(p => p.Cost) - Model.PartsUsed.Where(p => p.Recycled).Sum(p => p.Cost))</td>
+                        </tr>
+                        <tr>
+                            <td>Average Repair Cost</td>
+                            <td>@string.Format("{0:c}", avgRepairCost)</td>
+                        </tr>
+                        <tr>
+                            <td>Highest Repair Cost</td>
+                            <td>@string.Format("{0:c}", maxRepairCost)</td>
+                        </tr>
+                        <tr>
+                            <td>Lowest Repair Cost</td>
+                            <td>@string.Format("{0:c}", minRepairCost)</td>
+                        </tr>
+                        <tr>
+                            <td># of Requests</td>
+                            <td>@Model.RepairLogs.Count</td>
+                        </tr>
+                        <tr>
+                            <td># of Devices Owned</td>
+                            <td>@Model.Devices.Count</td>
+                        </tr>
+                        <tr>
+                            <td># of Requests With Damages</td>
+                            <td>@Model.RepairLogs.Count(r => r.IssueName.ToLower().Contains("damage"))</td>
+                        </tr>
+                        <tr>
+                            <td># of Regular Parts Used</td>
+                            <td>@Model.PartsUsed.Count(p => !p.Recycled)</td>
+                        </tr>
+                        <tr>
+                            <td># of Recycled Parts Used</td>
+                            <td>@Model.PartsUsed.Count(p => p.Recycled)</td>
+                        </tr>
+                        <tr>
+                            <td>Total # of Parts Used</td>
+                            <td>@Model.PartsUsed.Count</td>
+                        </tr>
+                        <tr>
+                            <td>Average Repair Time</td>
+                            <td>@avgRepairTime days</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

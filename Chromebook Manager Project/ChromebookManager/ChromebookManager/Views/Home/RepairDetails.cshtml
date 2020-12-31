@@ -1,0 +1,355 @@
+﻿@model ChromebookManager.Models.Home.RepairDetailsVM
+
+@{
+    ViewBag.Title = "RepairDetails";
+    var totalCost = Model.PartsUsed.Sum(p => p.Cost);
+    var recycledSavings = Model.PartsUsed.Where(p => p.Recycled).Sum(p => p.Cost);
+}
+
+<h2>Repair Details</h2>
+<hr />
+
+<div id="accordion">
+    <div class="card">
+        <div class="card-header text-center" id="clientInfoHeading">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#clientInfo" aria-expanded="true" aria-controls="clientInfo">
+                    Client Information
+                </button>
+            </h5>
+        </div>
+
+        <div id="clientInfo" class="collapse show" aria-labelledby="clientInfoHeading" data-parent="#accordion">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width:45%">Category</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Client Name</td>
+                            @if (string.IsNullOrEmpty(Model.Client.Username))
+                            {
+                                <td>Unassigned</td>
+                            }
+                            else
+                            {
+                                <td>@Model.Client.FirstName @Model.Client.LastName</td>
+                            }
+                        </tr>
+                        @if (!string.IsNullOrEmpty(Model.Client.Username))
+                        {
+                            <tr>
+                                <td>Client Username</td>
+                                <td>@Model.RepairLog.Username</td>
+                            </tr>
+                            <tr>
+                                <td>Grade</td>
+                                <td>@Model.RepairLog.Grade</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>School</td>
+                            <td>@Model.RepairLog.SchoolName</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header text-center" id="repairInfoHeading">
+            <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#repairInfo" aria-expanded="false" aria-controls="repairInfo">
+                    Repair Information
+                </button>
+            </h5>
+        </div>
+        <div id="repairInfo" class="collapse" aria-labelledby="repairInfoHeading" data-parent="#accordion">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width:45%">Category</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Date Submitted</td>
+                            <td>@Model.RepairLog.RepairTimestamp.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <td>Time Submitted</td>
+                            <td>@Model.RepairLog.RepairTimestamp.ToShortTimeString()</td>
+                        </tr>
+                        <tr>
+                            <td>Model</td>
+                            <td>@Model.Model</td>
+                        </tr>
+                        <tr>
+                            <td>Barcode</td>
+                            <td>@Model.RepairLog.Barcode</td>
+                        </tr>
+                        <tr>
+                            <td>Serial Number</td>
+                            <td>@Model.RepairLog.SerialNumber</td>
+                        </tr>
+                        <tr>
+                            <td>Issue Type</td>
+                            <td>@Model.RepairLog.IssueName</td>
+                        </tr>
+                        <tr>
+                            <td>Issue Description</td>
+                            <td>@Model.RepairLog.IssueDescription</td>
+                        </tr>
+                        <tr>
+                            <td>Submitted By</td>
+                            <td>@Model.RepairLog.EmailAddress</td>
+                        </tr>
+                        <tr>
+                            <td>Date Returned</td>
+                            @if (Model.RepairLog.RepairReturnedDate.HasValue)
+                            {
+                                <td>@Model.RepairLog.RepairReturnedDate.Value.ToShortDateString()</td>
+                            }
+                            else
+                            {
+                                <td style="color:orange">In Progress</td>
+                            }
+                        </tr>
+                        <tr>
+                            <td>Repair Notes</td>
+                            @if (Model.RepairLog.RepairNotes == null)
+                            {
+                                <td>None</td>
+                            }
+                            else
+                            {
+                                <td>@Model.RepairLog.RepairNotes</td>
+                            }
+                        </tr>
+                        @if (!string.IsNullOrEmpty(Model.RepairLog.Notes))
+                        {
+                            <tr>
+                                <td>Notes</td>
+                                <td>@Model.RepairLog.Notes</td>
+                            </tr>
+                        }
+                        @if (Model.RepairLog.WarrantyRepairSentDate.HasValue)
+                        {
+                            <tr>
+                                <td>Warranty Repair Sent Date</td>
+                                <td>@Model.RepairLog.WarrantyRepairSentDate.Value.ToShortDateString()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header text-center" id="partsUsedHeading">
+            <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#partsUsed" aria-expanded="false" aria-controls="partsUsed">
+                    Parts Used
+                </button>
+            </h5>
+        </div>
+        <div id="partsUsed" class="collapse" aria-labelledby="partsUsedHeading" data-parent="#accordion">
+            <div class="card-body">
+                @if (Model.PartsUsed.Count > 0)
+                {
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header text-center">Details</div>
+                                <div class="card-body text-dark">
+                                    <p class="card-text"># of parts used: @Model.PartsUsed.Count</p>
+                                    @if (recycledSavings > 0)
+                                    {
+                                        <p class="text-success"># of recycled parts used: @Model.PartsUsed.Count(p => p.Recycled)</p>
+                                        <p>Parts used value: @string.Format("{0:c}", totalCost)</p>
+                                        <p class="text-success">Recycled savings: @string.Format("{0:c}", recycledSavings)</p>
+                                    }
+                                </div>
+                                <div class="card-footer">
+                                    Total repair cost: @string.Format("{0:c}", totalCost - recycledSavings)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width:50%">Part Name</th>
+                                        <th>Cost</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var part in Model.PartsUsed)
+                                    {
+                                        <tr>
+                                            <td>@part.PartName</td>
+                                            @if (part.Recycled)
+                                            {
+                                                <td class="text-success"><s>@string.Format("{0:c}", part.Cost)</s></td>
+                                            }
+                                            else
+                                            {
+                                                <td>@string.Format("{0:c}", part.Cost)</td>
+                                            }
+                                            <td class="text-right">
+                                                @using (Html.BeginForm("RemovePartUsed", "Home", FormMethod.Post))
+                                                {
+                                                    @Html.Hidden("partUsedId", part.PartUsedId)
+                                                    @Html.Hidden("repairId", part.RepairId)
+                                                    <button style="color:red" class="btn btn-outline-secondary" onclick="return confirm('Are you sure you want to remove this part from this repair request?');">Remove</button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-center">No parts from inventory have been used on this repair request.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("DeleteRepairLog", "Home", FormMethod.Post))
+{
+    @Html.Hidden("repairIdDelete", Model.RepairLog.RepairId)
+    @Html.ActionLink("Repair Log", "RepairLog", "Home", null, new { @class = "btn btn-light" })
+    @Html.ActionLink("Client Profile", "ClientProfile", "Home", new { id = Model.Client.ClientId }, new { @class = "btn btn-outline-info" })
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editRepairDetails">Edit</button>
+    <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#addPartsUsed">Add Parts Used</button>
+    <button style="color:red" class="btn btn-outline-secondary" onclick="return confirm('Are you sure you want to delete this repair log entry?');">Delete</button>
+}
+
+<div id="editRepairDetails" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editRepairTitle" aria-hidden="true" style="display:none">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="editRepairTitle">Edit Repair Information</h3>
+            </div>
+            @using (Html.BeginForm("EditRepair", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.HiddenFor(m => m.RepairLog.RepairId)
+                <div class="modal-body">
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="RepairLog_RepairNotes">Repair Notes: </label>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(m => m.RepairLog.RepairNotes, new { @class = "form-control", style = "height:120px", required = "required" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="RepairLog_Notes">Notes: </label>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(m => m.RepairLog.Notes, new { @class = "form-control", style = "height:120px" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-8 control-label" for="RepairLog_RepairReturnedDate">Repair Returned Date: </label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.RepairLog.RepairReturnedDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", min = "2019-01-01" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-8 control-label" for="RepairLog_WarrantyRepairSentDate">Warranty Repair Sent Date: </label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.RepairLog.WarrantyRepairSentDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", min = "2019-01-01" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="addPartsUsed" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPartsUsedTitle" aria-hidden="true" style="display:none">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="addPartsUsedTitle">Add Parts Used</h3>
+            </div>
+            @using (Html.BeginForm("AddPartsUsed", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.HiddenFor(m => m.RepairLog.RepairId, new { id = "partsUsedRepairId" })
+                <div class="modal-body">
+                    @if (Model.PartsSelectList.Count > 0)
+                    {
+                        @Html.ValidationSummary("", new { @class = "text-danger" })
+                        <p>Inventory source: <b>@Model.RepairLog.SchoolName</b></p>
+                        <div id="addPartsUsedContainer">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="AddedPartsUsed">Part Used # 1: </label>
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(m => m.AddedPartsUsed, Model.PartsSelectList, "- Select a Part -", new { @class = "form-control", required = "required", id = "PartsList0" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>
+                            Sorry, @Model.RepairLog.SchoolName has no parts in their inventory.
+                            Please contact an admin about updating this school's inventory.
+                        </p>
+                    }
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    @if (Model.PartsSelectList.Count > 0)
+                    {
+                        <button id="btnAdd" class="btn btn-outline-success">Add Another Part</button>
+                        <input type="submit" class="btn btn-primary" value="Save" />
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var itemIndex = 0;
+            $('#btnAdd').click(function (e) {
+                e.preventDefault();
+                var selectId = '#PartsList' + itemIndex
+                var selectList = $(selectId)
+                var prevInvId = selectList.find(':selected').val()
+                if(prevInvId != '') itemIndex++
+                else prevInvId = 0
+                $.get('@Url.Action("AddNewPartUsed", "Home")?index=' + itemIndex + '&prevInvId=' + prevInvId
+                ).done(function (data) {
+                    if (data) {
+                        var dataString = String(data)
+                        if(!dataString.includes('No part chosen')) $('#addPartsUsedContainer').append(data)
+                    }
+                    else {
+                        $('#addPartsUsedContainer').append('<p>This school has no more inventory to add.</p>')
+                        $('#btnAdd').hide()
+                    }
+                })
+            })
+        })
+    </script>
+}

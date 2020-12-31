@@ -1,0 +1,78 @@
+﻿@model List<ChromebookManager.Models.RepairLog>
+
+@{
+    ViewBag.Title = "Repair Log";
+}
+
+<h2>Repair Log</h2>
+<br />
+<table id="repairLogTable" class="table table-hover">
+    <thead>
+        <tr>
+            <th width="50px">Date Submitted</th>
+            <th width="50px">Time Submitted</th>
+            <th>Student Username</th>
+            <th>Grade</th>
+            <th>School</th>
+            <th>Barcode</th>
+            <th>Serial #</th>
+            <th>Issue Type</th>
+            <th>Issue Description</th>
+            <th>Email Address</th>
+            <th>Date Returned</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var entry in Model)
+        {
+        <tr data-toggle="tooltip" title="Added by @entry.AddedBy on @entry.RepairTimestamp" data-placement="top">
+            <td>@entry.RepairTimestamp.ToShortDateString()</td>
+            <td>@entry.RepairTimestamp.ToShortTimeString()</td>
+            @if (entry.Username == null)
+            {
+                <td>Unassigned</td>
+            }
+            else
+            {
+                <td>@entry.Username</td>
+            }
+            @if (entry.Grade == 0)
+            {
+                <td>N/A</td>
+            }
+            else
+            {
+                <td>@entry.Grade</td>
+            }
+            <td>@entry.SchoolName</td>
+            <td>@entry.Barcode</td>
+            <td>@entry.SerialNumber</td>
+            <td>@entry.IssueName</td>
+            <td>@entry.IssueDescription</td>
+            <td>@entry.EmailAddress</td>
+            @if (entry.RepairReturnedDate.HasValue)
+            {
+                <td>@entry.RepairReturnedDate.Value.ToShortDateString()</td>
+            }
+            else
+            {
+                <td style="color:orange">In progress</td>
+            }
+            <td>@Html.ActionLink("Details", "RepairDetails", "Home", new { id = entry.RepairId }, new { @class = "btn btn-outline-dark" })</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $('#repairLogTable').DataTable({
+                columnDefs: [
+                    { type: 'any-number', targets: [0, 3] },
+                    { "orderable": false, "targets": -1 },
+                    { "searchable": false, "targets": -1 }
+                ]
+            })
+    </script>
+}

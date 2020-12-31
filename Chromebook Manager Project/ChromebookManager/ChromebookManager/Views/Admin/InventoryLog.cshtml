@@ -1,0 +1,144 @@
+﻿@model ChromebookManager.Models.Admin.InventoryLogVM
+
+@{
+    ViewBag.Title = "InventoryLog";
+}
+
+<h2>Inventory Log</h2>
+<hr />
+
+<ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="inv-history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="true">Inventory Edit History</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="inv-transfers-tab" data-toggle="tab" href="#transfers" role="tab" aria-controls="transfers" aria-selected="false">Inventory Transfers</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="inv-history-tab">
+        <br />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>School</th>
+                    <th>Part Name</th>
+                    <th>Old Qty</th>
+                    <th>New Qty</th>
+                    <th>Notes</th>
+                    <th>Date Modified</th>
+                    <th>Modified By</th>
+                    <th width="10%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var edit in Model.InvEditHistory)
+                {
+                    var btnTitle = string.IsNullOrEmpty(edit.Notes) ? "Add Notes" : "Edit Notes";
+                    <tr>
+                        <td>@edit.School</td>
+                        <td>@edit.PartName</td>
+                        @if (edit.Recycled)
+                        {
+                            <td class="text-success" data-toggle="tooltip" title="Recycled" data-placement="top">@edit.OldQty</td>
+                            <td class="text-success" data-toggle="tooltip" title="Recycled" data-placement="top">@edit.NewQty</td>
+                        }
+                        else
+                        {
+                            <td>@edit.OldQty</td>
+                            <td>@edit.NewQty</td>
+                        }
+                        <td class="notes">@edit.Notes</td>
+                        <td>@edit.DateModified</td>
+                        <td>@edit.ModifiedBy</td>
+                        <td class="text-right"><button class="btn btn-outline-dark btnEdit" type="button" data-toggle="modal" data-target="#editNotes" value="@edit.InvEditId">@btnTitle</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div id="editNotes" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editNotesTitle" aria-hidden="true" style="display:none">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="editNotesTitle">Edit Notes</h3>
+                    </div>
+                    @using (Html.BeginForm("EditNotes", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        <div class="modal-body">
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+                            @Html.HiddenFor(m => m.InvEditId)
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="Notes">Notes: </label>
+                                <div class="col-md-8">
+                                    @Html.TextAreaFor(m => m.Notes, new { @class = "form-control", style = "height:120px" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Save" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="transfers" role="tabpanel" aria-labelledby="inv-transfers-tab">
+        <br />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Part Name</th>
+                    <th>From School</th>
+                    <th>To School</th>
+                    <th>Qty</th>
+                    <th>Transfer Date</th>
+                    <th>User</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var transfer in Model.InvTransfers)
+                {
+                    <tr>
+                        <td>@transfer.PartName</td>
+                        <td>@transfer.FromSchoolName</td>
+                        <td>@transfer.ToSchoolName</td>
+                        @if (transfer.Recycled)
+                        {
+                            <td class="text-success" data-toggle="tooltip" title="Recycled" data-placement="top">@transfer.Qty</td>
+                        }
+                        else
+                        {
+                            <td>@transfer.Qty</td>
+                        }
+                        <td>@transfer.TransferDate</td>
+                        <td>@transfer.Username</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('.btnEdit').click(function () {
+                var currentRow = $(this).closest('tr')
+                var invEditId = $(this).val()
+                var notes = currentRow.find('.notes').text()
+                $('#InvEditId').val(invEditId)
+                $('#Notes').val(notes)
+                $('#editNotesTitle').text($(this).text())
+            })
+
+            $('table').DataTable({
+            columnDefs: [
+                { "orderable": false, "targets": -1 },
+                { "searchable": false, "targets": -1 }
+            ]
+            })
+        })
+    </script>    
+}

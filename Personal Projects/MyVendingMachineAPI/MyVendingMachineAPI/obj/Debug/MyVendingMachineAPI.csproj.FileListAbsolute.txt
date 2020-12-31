@@ -14,7 +14,8 @@ C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\My
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\MyVendingMachineAPI\bin\System.Web.Http.Cors.xml
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\MyVendingMachineAPI\bin\Newtonsoft.Json.xml
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\MyVendingMachineAPI\bin\System.Web.Http.WebHost.xml
-C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\MyVendingMachineAPI\obj\Debug\MyVendingMachineAPI.csprojResolveAssemblyReference.cache
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\MyVendingMachineAPI\obj\Debug\MyVendingMachineAPI.csproj.CoreCompileInputs.cache
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\MyVendingMachineAPI\obj\Debug\MyVendingMachineAPI.dll
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\MyVendingMachineAPI\obj\Debug\MyVendingMachineAPI.pdb
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\MyVendingMachineAPI\obj\Debug\MyVendingMachineAPI.csprojAssemblyReference.cache
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\MyVendingMachineAPI\MyVendingMachineAPI\obj\Debug\MyVendingMachineAPI.csproj.CopyComplete

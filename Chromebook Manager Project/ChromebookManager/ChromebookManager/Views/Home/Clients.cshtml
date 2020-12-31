@@ -1,0 +1,68 @@
+﻿@model List<ChromebookManager.Models.Client>
+
+@{
+    ViewBag.Title = "Clients";
+}
+
+<h2>Clients</h2>
+<br />
+<table id="clientTable" class="table table-hover">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Student Number</th>
+            <th>Grade</th>
+            <th>Current School</th>
+            <th>Device Barcode</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var client in Model)
+        {
+            <tr data-toggle="tooltip" title="Added by @client.AddedBy on @client.DateAdded.ToShortDateString()" data-placement="top">
+                <td>@client.FirstName</td>
+                <td>@client.LastName</td>
+                @if (string.IsNullOrEmpty(client.Username))
+                {
+                    <td>N/A</td>
+                }
+                else
+                {
+                    <td>@client.Username</td>
+                }
+                @if(client.StudentNumber == 0)
+                {
+                    <td>N/A</td>
+                }
+                else
+                {
+                    <td>@client.StudentNumber</td>
+                }
+                @if(client.Grade == 0)
+                {
+                    <td>N/A</td>
+                }
+                else
+                {
+                    <td>@client.Grade</td>
+                }
+                <td>@client.CurrentSchool</td>
+                <td>@client.Barcode</td>
+                <td>@Html.ActionLink("Info", "ClientProfile", "Home", new { id = client.ClientId }, new { @class = "btn btn-outline-dark" })</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $('#clientTable').DataTable({
+                columnDefs: [
+                    { type: 'any-number', targets : 4 }
+                ]
+            })
+    </script>
+}

@@ -1,0 +1,35 @@
+﻿@model ChromebookManager.Models.Admin.PurchaseOrderVM
+
+@{
+    ViewBag.Title = "PurchaseOrders";
+}
+
+<h2>Purchase Orders</h2>
+
+<table class="table table table-hover">
+    <thead>
+        <tr>
+            <th>PO Number</th>
+            <th>Total Qty</th>
+            <th>Total Cost</th>
+            <th data-toggle="tooltip" title="Number of Line Items" data-placement="top"># of LI's</th>
+            <th data-toggle="tooltip" title="Number of Line Items Pending" data-placement="top"># Pending</th>
+            <th width="25%">Notes</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var po in Model.PurchaseOrders)
+        {
+            <tr data-toggle="tooltip" title="Added by @po.Username on @po.TransactionDate" data-placement="top">
+                <td>@po.PONumber</td>
+                <td>@po.TotalQty</td>
+                <td>@string.Format("{0:c}", po.TotalCost)</td>
+                <td>@po.NumOfLIs</td>
+                <td>@po.NumOfPendingLIs</td>
+                <td>@po.Notes</td>
+                <td class="text-right">@Html.ActionLink("View Items", "ViewLineItems", new { po = po.PONumber }, new { @class = "btn btn-outline-dark" })</td>
+            </tr>
+        }
+    </tbody>
+</table>

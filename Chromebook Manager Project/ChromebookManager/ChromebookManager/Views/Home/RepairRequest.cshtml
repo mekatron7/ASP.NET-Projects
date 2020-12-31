@@ -1,0 +1,139 @@
+﻿@model ChromebookManager.Models.Home.RepairRequestVM
+
+@{
+    ViewBag.Title = "RepairRequest";
+}
+
+<h2>Repair Request Form</h2>
+<hr />
+
+@if (Model.IssueTypes.Count > 0)
+{
+    if (Model.Alert != null && !string.IsNullOrEmpty(Model.Alert.AlertMessage))
+    {
+        <div class="alert @Model.Alert.AlertType alert-dismissible fade show" role="alert">
+            <strong>@Model.Alert.AlertTitle</strong> @Model.Alert.AlertMessage
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    using (Html.BeginForm("RepairRequest", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.HiddenFor(m => m.FromClientProfile)
+        <div id="schoolSelect">
+            <div class="form-row">
+                <label for="School" class="col-sm-2 col-form-label">School</label>
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(m => m.SchoolId, Model.Schools, "- Select a School -", new { @class = "form-control", required = "required" })
+                </div>
+            </div>
+            <br />
+        </div>
+        <div class="form-row">
+            <label for="StudentUsername" class="col-sm-2 col-form-label">Student Username</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.StudentUsername, new { @class = "form-control", required = "required" })
+            </div>
+            <div id="chkUnassigned" class="col-sm-6">
+                <div class="form-check">
+                    @Html.CheckBoxFor(m => m.Unassigned, new { @class = "form-check-input" })
+                    <label class="form-check-label" for="Unassigned">Check if device is unassigned</label>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div id="barcodeDiv">
+            <div class="form-row">
+                <label for="Barcode" class="col-sm-2 col-form-label">Barcode</label>
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.Barcode, new { @class = "form-control", maxlength = "10", required = "required" })
+                </div>
+            </div>
+            <br />
+        </div>
+        <fieldset class="form-group">
+            <div class="row">
+                <label class="col-form-label col-sm-2 pt-0">Type of Issue</label>
+                <div class="col-sm-10">
+                    @foreach (var issue in Model.IssueTypes)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="IssueType" id="@issue.IssueId" value="@issue.IssueId" required @if (Model.IssueType == issue.IssueId) { <text> checked</text> } />
+                            <label class="form-check-label" for="@issue.IssueId">@issue.IssueName - <i>@issue.IssueDescription</i></label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <div class="form-row">
+            <label for="IssueDescription" class="col-md-2 col-form-label">Issue Description</label>
+            <div class="col-md-10">
+                Explain in detail what is wrong with the device. Make sure this can be easily understood or duplicated with this information.<br />
+                Examples:<br />
+                - The screen is cracked in the upper right corner.<br />- The WiFi is not working at home but works fine at school.<br />
+                - The OS is not working.<br />- The Y & J keys do not work.
+                @Html.TextAreaFor(m => m.IssueDescription, new { @class = "form-control", style = "height: 120px" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-primary" value="Submit Request" />
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p class="text-center">Before repair requests can be made, an Admin must first create at least one Issue Type in the system.</p>
+}
+
+
+
+@section Scripts{
+    <script>
+        if ($('#Unassigned').is(':checked')) {
+            $('#StudentUsername').prop('disabled', true)
+            $('#schoolSelect *').prop('disabled', false)
+            $('#schoolSelect').show()
+            $('#barcodeDiv *').prop('disabled', false)
+            $('#barcodeDiv').show()
+        }
+        else {
+            $('#StudentUsername').prop('disabled', false)
+            $('#schoolSelect *').prop('disabled', true)
+            $('#schoolSelect').hide();
+            $('#barcodeDiv *').prop('disabled', true)
+            $('#barcodeDiv').hide()
+        }
+
+        if ($('#FromClientProfile').val() == 'True') {
+            $('#chkUnassigned *').prop('disabled', true)
+            $('#chkUnassigned').hide();
+            $('#StudentUsername').prop('readonly', true)
+        }
+
+        $(document).ready(function () {
+            $('#Unassigned').click(function () {
+                if ($(this).is(':checked')) {
+                    $('#StudentUsername').prop('disabled', true)
+                    $('#schoolSelect *').prop('disabled', false)
+                    $('#schoolSelect').show()
+                    $('#barcodeDiv *').prop('disabled', false)
+                    $('#barcodeDiv').show()
+                }
+                else {
+                    $('#StudentUsername').prop('disabled', false)
+                    $('#schoolSelect *').prop('disabled', true)
+                    $('#schoolSelect').hide();
+                    $('#barcodeDiv *').prop('disabled', true)
+                    $('#barcodeDiv').hide()
+                }
+            })
+        })
+    </script>
+}

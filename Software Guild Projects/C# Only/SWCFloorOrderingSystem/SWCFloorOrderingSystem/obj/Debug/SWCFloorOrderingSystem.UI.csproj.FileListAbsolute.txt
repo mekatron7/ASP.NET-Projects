@@ -11,3 +11,17 @@ C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOr
 C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem\obj\Debug\SWCFloorOrderingSystem.UI.csproj.CoreCompileInputs.cache
 C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem\obj\Debug\SWCFloorOrderingSystem.exe
 C:\Users\Emeka\source\repos\emeka-ezenagu-individual-work\C# Projects\SWCFloorOrderingSystem\SWCFloorOrderingSystem\obj\Debug\SWCFloorOrderingSystem.pdb
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\bin\Debug\SWCFloorOrderingSystem.exe.config
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\bin\Debug\SWCFloorOrderingSystem.exe
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\bin\Debug\SWCFloorOrderingSystem.pdb
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\bin\Debug\SWCFloorOrderingSystem.BLL.dll
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\bin\Debug\SWCFloorOrderingSystem.Models.dll
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\bin\Debug\SWCFloorOrderingSystem.Data.dll
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\bin\Debug\SWCFloorOrderingSystem.BLL.pdb
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\bin\Debug\SWCFloorOrderingSystem.Models.pdb
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\bin\Debug\SWCFloorOrderingSystem.Data.pdb
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\obj\Debug\SWCFloorOrderingSystem.UI.csprojAssemblyReference.cache
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\obj\Debug\SWCFloorOrderingSystem.UI.csproj.CoreCompileInputs.cache
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\obj\Debug\SWCFloorOrderingSystem.UI.csproj.CopyComplete
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\obj\Debug\SWCFloorOrderingSystem.exe
+C:\Users\Emeka\Documents\My C# Projects\Software Guild Projects\C# Only\SWCFloorOrderingSystem\SWCFloorOrderingSystem\obj\Debug\SWCFloorOrderingSystem.pdb

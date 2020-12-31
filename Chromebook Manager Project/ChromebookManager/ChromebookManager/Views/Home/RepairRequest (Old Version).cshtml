@@ -1,0 +1,182 @@
+﻿@model ChromebookManager.Models.Home.RepairRequestVM
+
+@{
+    ViewBag.Title = "RepairRequest";
+}
+
+<h2>Repair Request Form</h2>
+<hr />
+
+@if (Model.Alert != null && !string.IsNullOrEmpty(Model.Alert.AlertMessage))
+{
+    <div class="alert @Model.Alert.AlertType alert-dismissible fade show" role="alert">
+        <strong>@Model.Alert.AlertTitle</strong> @Model.Alert.AlertMessage
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@using (Html.BeginForm("RepairRequest", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="form-row">
+        <label for="School" class="col-sm-2 col-form-label">School</label>
+        <div class="col-sm-10">
+            @Html.DropDownListFor(m => m.SchoolId, Model.Schools, "- Select a School -", new { @class = "form-control", required = "required" })
+        </div>
+    </div>
+    <br />
+    <div class="form-row">
+        <label for="StudentUsername" class="col-sm-2 col-form-label">Student Username</label>
+        <div class="col-sm-4">
+            @Html.TextBoxFor(m => m.StudentUsername, new { @class = "form-control", required = "required" })
+        </div>
+        <div class="col-sm-6">
+            <div class="form-check">
+                @Html.CheckBoxFor(m => m.Unassigned, new { @class = "form-check-input" })
+                <label class="form-check-label" for="Unassigned">Check if device is unassigned</label>
+            </div>
+        </div>
+    </div>
+    <br />
+    <fieldset class="form-group">
+        <div class="row">
+            <label class="col-form-label col-sm-2 pt-0">Grade</label>
+            <div id="gradeRadiosDiv" class="col-sm-10">
+                Please select a school.
+            </div>
+        </div>
+    </fieldset>
+    <br />
+    <div class="form-row">
+        <label for="Barcode" class="col-sm-2 col-form-label">Barcode</label>
+        <div class="col-sm-10">
+            @Html.TextBoxFor(m => m.Barcode, new { @class = "form-control", maxlength = "10", required = "required" })
+        </div>
+    </div>
+    <br />
+    <div class="form-row">
+        <label for="SerialNumber" class="col-sm-2 col-form-label">Serial Number</label>
+        <div class="col-sm-10">
+            @Html.TextBoxFor(m => m.SerialNumber, new { @class = "form-control", maxlength = "10", required = "required" })
+        </div>
+    </div>
+    <br />
+    <fieldset class="form-group">
+        <div class="row">
+            <label class="col-form-label col-sm-2 pt-0">Type of Issue</label>
+            <div class="col-sm-10">
+                @foreach (var issue in Model.IssueTypes)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="IssueType" id="@issue.IssueId" value="@issue.IssueId" required @if (Model.IssueType == issue.IssueId) {<text>checked</text> }/>
+                        <label class="form-check-label" for="@issue.IssueId">@issue.IssueName - <i>@issue.IssueDescription</i></label>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+    <br />
+    <div class="form-row">
+        <label for="IssueDescription" class="col-md-2 col-form-label">Issue Description</label>
+        <div class="col-md-10">
+            Explain in detail what is wrong with the device. Make sure this can be easily understood or duplicated with this information.<br />
+            Examples:<br />
+            - The screen is cracked in the upper right corner.<br />- The WiFi is not working at home but works fine at school.<br />
+            - The OS is not working.<br />- The Y & J keys do not work.
+            @Html.TextAreaFor(m => m.IssueDescription, new { @class = "form-control", style = "height: 120px" })
+        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-default" })
+            @Html.ActionLink("Automatic Version", "RepairRequestAutomatic", "Home", null, new { @class = "btn btn-dark" })
+            <input type="submit" class="btn btn-primary" value="Submit Request" />
+        </div>
+    </div>
+}
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var highSchools = [18, 19, 25]
+            var middleSchools = [15, 16, 17, 26]
+            var gradesDiv = $('#gradeRadiosDiv')
+            var gradeVal = @Model.Grade
+
+            @if(Model.Alert != null){
+                <text>SetGrades(parseInt($('#SchoolId').val()), true)</text>
+            }
+
+            $('#Unassigned').click(function () {
+                if ($(this).is(':checked')) {
+                    $('#StudentUsername').prop('disabled', true)
+                    $('#gradeRadiosDiv *').prop('disabled', true)
+                }
+                else {
+                    $('#StudentUsername').prop('disabled', false)
+                    $('#gradeRadiosDiv *').prop('disabled', false)
+                }
+            })
+
+            $('#SchoolId').on('change', function () {
+                var schoolId = parseInt(this.value)
+                SetGrades(schoolId, false)
+            })
+
+            function SetGrades(schoolId, reload) {
+                gradesDiv.empty()
+                var radios = ''
+                var checked = ''
+                if (highSchools.includes(schoolId)) {
+                    for (var i = 9; i <= 12; i++) {
+                        if(gradeVal == i && reload) checked = 'checked'
+                        radios += '<div class="form-check">'
+                        radios += '<input class="form-check-input" type="radio" name="Grade" id="grade' + i + '" value="' + i + '" required ' + checked + ' />'
+                        radios += '<label class="form-check-label" for="grade' + i + '">' + i + 'th Grade</label>'
+                        radios += '</div>'
+                        if(checked == 'checked') checked = ''
+                    }
+                    gradesDiv.append(radios)
+                }
+                else if (middleSchools.includes(schoolId)) {
+                    if (schoolId == 26) {
+                        if(gradeVal == i  && reload) checked = 'checked'
+                        radios += '<div class="form-check">'
+                        radios += '<input class="form-check-input" type="radio" name="Grade" id="grade5" value="5" required ' + checked + ' />'
+                        radios += '<label class="form-check-label" for="grade5">5th Grade</label>'
+                        radios += '</div>'
+                        if(checked == 'checked') checked = ''
+                    }
+                    for (var i = 6; i <= 8; i++) {
+                        if(gradeVal == i  && reload) checked = 'checked'
+                        radios += '<div class="form-check">'
+                        radios += '<input class="form-check-input" type="radio" name="Grade" id="grade' + i + '" value="' + i + '" required ' + checked + ' />'
+                        radios += '<label class="form-check-label" for="grade' + i + '">' + i + 'th Grade</label>'
+                        radios += '</div>'
+                        if(checked == 'checked') checked = ''
+                    }
+                    gradesDiv.append(radios)
+                }
+                else {
+                    if (!schoolId) {
+                        gradesDiv.append('Please select a school.')
+                    }
+                    else {
+                        radios += '<div class="form-check">'
+                        radios += '<input class="form-check-input" type="radio" name="Grade" id="grade5" value="5" checked />'
+                        radios += '<label class="form-check-label" for="grade5">5th Grade</label>'
+                        radios += '</div>'
+                        gradesDiv.append(radios)
+                    }
+                }
+                if ($('#Unassigned').is(':checked')) {
+                    $('#StudentUsername').prop('disabled', true)
+                    $('#gradeRadiosDiv *').prop('disabled', true)
+                }
+            }
+        })
+    </script>
+}
+

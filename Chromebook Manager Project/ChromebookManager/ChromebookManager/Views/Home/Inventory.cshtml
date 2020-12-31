@@ -1,0 +1,556 @@
+﻿@model ChromebookManager.Models.Home.InventoryVM
+
+@{
+    ViewBag.Title = "Inventory";
+    var invBySchool = Model.InventoryList.GroupBy(il => il.SchoolId);
+    var invByBrand = Model.InventoryList.GroupBy(il => il.BrandId);
+    var invByModel = Model.InventoryList.GroupBy(il => il.ModelId);
+    var invByPart = Model.InventoryList.GroupBy(il => il.PartId);
+    var invByModelPart = Model.InventoryList.GroupBy(il => il.ModelPartId);
+    int i = 0;
+    var active = "";
+    var showActive = "";
+}
+
+<h2>Inventory</h2>
+<hr />
+@if (Model.Alerts.Count > 0)
+{
+    foreach (var alert in Model.Alerts)
+    {
+        <div class="alert @alert.AlertType alert-dismissible fade show" role="alert">
+            <strong>@alert.AlertTitle</strong> @alert.AlertMessage
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+}
+<div class="text-right">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addInv">Add New Inventory</button>
+</div>
+
+<ul class="nav nav-tabs nav-fill">
+    <li class="nav-item">
+        <a class="nav-link active" id="bySchoolTab" data-toggle="tab" href="#invBySchool" role="tab" aria-controls="invBySchool" aria-selected="true">By School</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="byBrandTab" data-toggle="tab" href="#invByBrand" role="tab" aria-controls="invByBrand" aria-selected="false">By Brand</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="byModelTab" data-toggle="tab" href="#invByModel" role="tab" aria-controls="invByModel" aria-selected="false">By Model</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="byPartTab" data-toggle="tab" href="#invByPart" role="tab" aria-controls="invByPart" aria-selected="false">By Part</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="byModelPartTab" data-toggle="tab" href="#invByModelPart" role="tab" aria-controls="invByModelPart" aria-selected="false">By Model Part</a>
+    </li>
+</ul>
+<div class="tab-content" id="inventoryContent">
+    <div class="tab-pane fade show active" id="invBySchool" role="tabpanel" aria-labelledby="bySchoolTab">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="nav flex-column nav-pills" id="schoolChoicesTab" role="tablist" aria-orientation="vertical">
+                    <br />
+                    @foreach (var school in invBySchool)
+                    {
+                        active = i == 0 ? "active" : "";
+                        var schoolName = school.Select(s => s.SchoolName).FirstOrDefault();
+                        <a class="nav-link @active" id="@string.Concat("bySchoolTab", school.Key)" data-toggle="pill" href="#@string.Concat("schoolInv", school.Key)" role="tab" aria-controls="@string.Concat("schoolInv", school.Key)" aria-selected="true">@schoolName</a>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                    }
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    @foreach (var school in invBySchool)
+                    {
+                        showActive = i == 0 ? "show active" : "";
+                        <div class="tab-pane fade @showActive" id="@string.Concat("schoolInv", school.Key)" role="tabpanel" aria-labelledby="@string.Concat("bySchoolTab", school.Key)">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Inv Id</th>
+                                        <th>Part Name</th>
+                                        <th>Qty</th>
+                                        <th data-toggle="tooltip" title="Recycled Quantity" data-placement="top">Qty (R)</th>
+                                        <th>Unit Cost</th>
+                                        <th>Total Cost</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var inv in school)
+                                    {
+                                        <tr data-toggle="tooltip" title="Last modified by @inv.LastModifiedBy on @inv.DateLastModified" data-placement="top">
+                                            <td>@inv.InventoryId</td>
+                                            <td class="partName">@inv.BrandName @inv.ModelNumber @inv.PartName</td>
+                                            <td class="qty">@inv.Qty</td>
+                                            <td class="qtyR">@inv.RecycledQty</td>
+                                            <td>@string.Format("{0:c}", inv.UnitCost)</td>
+                                            <td>@string.Format("{0:c}", inv.TotalCost)</td>
+                                            <td class="schName" hidden>@inv.SchoolName</td>
+                                            <td class="text-right"><button type="button" class="btn btn-outline-secondary editInv" data-toggle="modal" data-target="#editInventory" value="@inv.InventoryId">Edit</button> <button type="button" class="btn btn-outline-dark transferInv" data-toggle="modal" data-target="#transferInventory" value="@inv.InventoryId">Transfer</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                        showActive = "";
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="invByBrand" role="tabpanel" aria-labelledby="byBrandTab">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="nav flex-column nav-pills" id="brandChoicesTab" role="tablist" aria-orientation="vertical">
+                    <br />
+                    @foreach (var brand in invByBrand)
+                    {
+                        active = i == 0 ? "active" : "";
+                        var brandName = brand.Select(b => b.BrandName).FirstOrDefault();
+                        <a class="nav-link @active" id="@string.Concat("byBrandTab", brand.Key)" data-toggle="pill" href="#@string.Concat("brandInv", brand.Key)" role="tab" aria-controls="@string.Concat("brandInv", brand.Key)" aria-selected="true">@brandName</a>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                    }
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="tab-content" id="v-pills-tabContent">
+                    @foreach (var brand in invByBrand)
+                    {
+                        showActive = i == 0 ? "show active" : "";
+                        <div class="tab-pane fade @showActive" id="@string.Concat("brandInv", brand.Key)" role="tabpanel" aria-labelledby="@string.Concat("byBrandTab", brand.Key)">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Inv Id</th>
+                                        <th>Part Name</th>
+                                        <th>School</th>
+                                        <th>Qty</th>
+                                        <th data-toggle="tooltip" title="Recycled Quantity" data-placement="top">Qty (R)</th>
+                                        <th>Unit Cost</th>
+                                        <th>Total Cost</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var inv in brand)
+                                    {
+                                        <tr data-toggle="tooltip" title="Last modified by @inv.LastModifiedBy on @inv.DateLastModified" data-placement="top">
+                                            <td>@inv.InventoryId</td>
+                                            <td class="partName">@inv.BrandName @inv.ModelNumber @inv.PartName</td>
+                                            <td class="schName">@inv.SchoolName</td>
+                                            <td class="qty">@inv.Qty</td>
+                                            <td class="qtyR">@inv.RecycledQty</td>
+                                            <td>@string.Format("{0:c}", inv.UnitCost)</td>
+                                            <td>@string.Format("{0:c}", inv.TotalCost)</td>
+                                            <td class="text-right"><button type="button" class="btn btn-outline-secondary editInv" data-toggle="modal" data-target="#editInventory" value="@inv.InventoryId">Edit</button> <button type="button" class="btn btn-outline-dark transferInv" data-toggle="modal" data-target="#transferInventory" value="@inv.InventoryId">Transfer</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                        showActive = "";
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="invByModel" role="tabpanel" aria-labelledby="byModelTab">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="nav flex-column nav-pills" id="modelChoicesTab" role="tablist" aria-orientation="vertical">
+                    <br />
+                    @foreach (var model in invByModel)
+                    {
+                        active = i == 0 ? "active" : "";
+                        var modelName = $"{model.Select(m => m.BrandName).FirstOrDefault()} {model.Select(m => m.ModelNumber).FirstOrDefault()}";
+                        <a class="nav-link @active" id="@string.Concat("byModelTab", model.Key)" data-toggle="pill" href="#@string.Concat("modelInv", model.Key)" role="tab" aria-controls="@string.Concat("modelInv", model.Key)" aria-selected="true">@modelName</a>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                    }
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="tab-content" id="v-pills-tabContent">
+                    @foreach (var model in invByModel)
+                    {
+                        showActive = i == 0 ? "show active" : "";
+                        <div class="tab-pane fade @showActive" id="@string.Concat("modelInv", model.Key)" role="tabpanel" aria-labelledby="@string.Concat("byModelTab", model.Key)">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Inv Id</th>
+                                        <th>Part Name</th>
+                                        <th>School</th>
+                                        <th>Qty</th>
+                                        <th data-toggle="tooltip" title="Recycled Quantity" data-placement="top">Qty (R)</th>
+                                        <th>Unit Cost</th>
+                                        <th>Total Cost</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var inv in model)
+                                    {
+                                        <tr data-toggle="tooltip" title="Last modified by @inv.LastModifiedBy on @inv.DateLastModified" data-placement="top">
+                                            <td>@inv.InventoryId</td>
+                                            <td class="partName">@inv.BrandName @inv.ModelNumber @inv.PartName</td>
+                                            <td class="schName">@inv.SchoolName</td>
+                                            <td class="qty">@inv.Qty</td>
+                                            <td class="qtyR">@inv.RecycledQty</td>
+                                            <td>@string.Format("{0:c}", inv.UnitCost)</td>
+                                            <td>@string.Format("{0:c}", inv.TotalCost)</td>
+                                            <td class="text-right"><button type="button" class="btn btn-outline-secondary editInv" data-toggle="modal" data-target="#editInventory" value="@inv.InventoryId">Edit</button> <button type="button" class="btn btn-outline-dark transferInv" data-toggle="modal" data-target="#transferInventory" value="@inv.InventoryId">Transfer</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                        showActive = "";
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="invByPart" role="tabpanel" aria-labelledby="byPartTab">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="nav flex-column nav-pills" id="partChoicesTab" role="tablist" aria-orientation="vertical">
+                    <br />
+                    @foreach (var part in invByPart)
+                    {
+                        active = i == 0 ? "active" : "";
+                        var partName = part.Select(p => p.PartName).FirstOrDefault();
+                        <a class="nav-link @active" id="@string.Concat("byPartTab", part.Key)" data-toggle="pill" href="#@string.Concat("partInv", part.Key)" role="tab" aria-controls="@string.Concat("partInv", part.Key)" aria-selected="true">@partName</a>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                    }
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="tab-content" id="v-pills-tabContent">
+                    @foreach (var part in invByPart)
+                    {
+                        showActive = i == 0 ? "show active" : "";
+                        <div class="tab-pane fade @showActive" id="@string.Concat("partInv", part.Key)" role="tabpanel" aria-labelledby="@string.Concat("byPartTab", part.Key)">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Inv Id</th>
+                                        <th>Part Name</th>
+                                        <th>School</th>
+                                        <th>Qty</th>
+                                        <th data-toggle="tooltip" title="Recycled Quantity" data-placement="top">Qty (R)</th>
+                                        <th>Unit Cost</th>
+                                        <th>Total Cost</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var inv in part)
+                                    {
+                                        <tr data-toggle="tooltip" title="Last modified by @inv.LastModifiedBy on @inv.DateLastModified" data-placement="top">
+                                            <td>@inv.InventoryId</td>
+                                            <td class="partName">@inv.BrandName @inv.ModelNumber @inv.PartName</td>
+                                            <td class="schName">@inv.SchoolName</td>
+                                            <td class="qty">@inv.Qty</td>
+                                            <td class="qtyR">@inv.RecycledQty</td>
+                                            <td>@string.Format("{0:c}", inv.UnitCost)</td>
+                                            <td>@string.Format("{0:c}", inv.TotalCost)</td>
+                                            <td class="text-right"><button type="button" class="btn btn-outline-secondary editInv" data-toggle="modal" data-target="#editInventory" value="@inv.InventoryId">Edit</button> <button type="button" class="btn btn-outline-dark transferInv" data-toggle="modal" data-target="#transferInventory" value="@inv.InventoryId">Transfer</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                        showActive = "";
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="invByModelPart" role="tabpanel" aria-labelledby="byModelPartTab">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="nav flex-column nav-pills" id="modelPartChoicesTab" role="tablist" aria-orientation="vertical">
+                    <br />
+                    @foreach (var mp in invByModelPart)
+                    {
+                        active = i == 0 ? "active" : "";
+                        var mpName = $"{mp.Select(m => m.BrandName).FirstOrDefault()} {mp.Select(m => m.ModelNumber).FirstOrDefault()} {mp.Select(m => m.PartName).FirstOrDefault()}";
+                        <a class="nav-link @active" id="@string.Concat("byModelPartTab", mp.Key)" data-toggle="pill" href="#@string.Concat("modelPartInv", mp.Key)" role="tab" aria-controls="@string.Concat("modelPartInv", mp.Key)" aria-selected="true">@mpName</a>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                    }
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    @foreach (var mp in invByModelPart)
+                    {
+                        showActive = i == 0 ? "show active" : "";
+                        <div class="tab-pane fade @showActive" id="@string.Concat("modelPartInv", mp.Key)" role="tabpanel" aria-labelledby="@string.Concat("byModelPartTab", mp.Key)">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Part Name</th>
+                                        <th>School</th>
+                                        <th>Qty</th>
+                                        <th data-toggle="tooltip" title="Recycled Quantity" data-placement="top">Qty (R)</th>
+                                        <th>Unit Cost</th>
+                                        <th>Total Cost</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var inv in mp)
+                                    {
+                                        <tr data-toggle="tooltip" title="Last modified by @inv.LastModifiedBy on @inv.DateLastModified" data-placement="top">
+                                            <td class="partName">@inv.BrandName @inv.ModelNumber @inv.PartName</td>
+                                            <td class="schName">@inv.SchoolName</td>
+                                            <td class="qty">@inv.Qty</td>
+                                            <td class="qtyR">@inv.RecycledQty</td>
+                                            <td>@string.Format("{0:c}", inv.UnitCost)</td>
+                                            <td>@string.Format("{0:c}", inv.TotalCost)</td>
+                                            <td class="text-right"><button type="button" class="btn btn-outline-secondary editInv" data-toggle="modal" data-target="#editInventory" value="@inv.InventoryId">Edit</button> <button type="button" class="btn btn-outline-dark transferInv" data-toggle="modal" data-target="#transferInventory" value="@inv.InventoryId">Transfer</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        i++;
+                    }
+                    @{
+                        i = 0;
+                        active = "";
+                        showActive = "";
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="addInv" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addInvTitle" aria-hidden="true" style="display:none">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="addInvTitle">Add New Inventory</h3>
+            </div>
+            @using (Html.BeginForm("AddInventory", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="modal-body">
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="ModelPartId">Model Part: </label>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.ModelPartId, Model.ModelPartSelectList, "- Select a Part -", new { @class = "form-control", required = "required" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="SchoolId">School: </label>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.SchoolId, Model.SchoolSelectList, "- Select a School -", new { @class = "form-control", required = "required" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="Qty">Qty: </label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Qty, new { @class = "form-control", type = "number", min = "1", required = "required" })
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" data-val="true" id="Recycled" name="Recycled" type="checkbox" value="true" /><input name="Recycled" type="hidden" value="false" />
+                        <label class="form-check-label" for="Recycled">Recycled</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="editInventory" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editInvTitle" aria-hidden="true" style="display:none">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="editInvTitle">Edit Inventory Quantity</h3>
+            </div>
+            @using (Html.BeginForm("EditInventory", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.HiddenFor(m => m.InventoryId)
+                <div class="modal-body">
+                    <p><b>School: </b><span id="editInvSchool"></span></p>
+                    <p><b>Part: </b><span id="editInvPart"></span></p>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="qtyEdit">Qty: </label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Qty, new { @class = "form-control", type = "number", min = "0", required = "required", id = "qtyEdit" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="RecycledQty">Recycled Qty: </label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.RecycledQty, new { @class = "form-control", type = "number", min = "0" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="Notes">Notes: </label>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(m => m.Notes, new { @class = "form-control", style = "height:120px" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="transferInventory" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="transInvTitle" aria-hidden="true" style="display:none">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="transInvTitle">Transfer Inventory</h3>
+            </div>
+            @using (Html.BeginForm("TransferInventory", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.HiddenFor(m => m.InventoryId, new { id = "transInvId" })
+                @Html.HiddenFor(m => m.FromSchool)
+                @Html.HiddenFor(m => m.ToSchool)
+                @Html.HiddenFor(m => m.PartName)
+                <div class="modal-body">
+                    <p><b>From School: </b><span id="fromSchool"></span></p>
+                    <p><b>Part: </b><span id="transInvPart"></span></p>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="toSchool">To School: </label>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.SchoolId, Model.SchoolSelectList, "- Select a School -", new { @class = "form-control", required = "required", id = "toSchool" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="qtyTransfer">Qty: </label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Qty, new { @class = "form-control", type = "number", min = "1", required = "required", id = "qtyTransfer" })
+                        </div>
+                    </div>
+                    <div id="recycledCheck" class="form-check">
+                        <input class="form-check-input" data-val="true" id="RecycledTransfer" name="Recycled" type="checkbox" value="true" /><input name="Recycled" type="hidden" value="false" />
+                        <label class="form-check-label" for="Recycled">Recycled</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var putBackSchool = ''
+            var max = 0
+            var recMax = 0
+            $('.editInv').click(function () {
+                var currentRow = $(this).closest('tr')
+                var schoolName = currentRow.find('.schName').text()
+                var partName = currentRow.find('.partName').text()
+                var qty = currentRow.find('.qty').text()
+                var recycledQty = currentRow.find('.qtyR').text()
+                $('#InventoryId').val($(this).val())
+                $('#editInvSchool').text(schoolName)
+                $('#editInvPart').text(partName)
+                $('#qtyEdit').val(qty)
+                $('#RecycledQty').val(recycledQty)
+            })
+
+            $('.transferInv').click(function () {
+                var currentRow = $(this).closest('tr')
+                var schoolName = currentRow.find('.schName').text()
+                putBackSchool = schoolName
+                var partName = currentRow.find('.partName').text()
+                max = currentRow.find('.qty').text()
+                recMax = currentRow.find('.qtyR').text()
+                if (recMax == 0) $('#recycledCheck').hide()
+                if(!$('#RecycledTransfer').is(':checked'))
+                    $('#qtyTransfer').attr({ 'max': max })
+                else $('#qtyTransfer').attr({ 'max': recMax })
+                $('#qtyTransfer').val(0)
+                $('#transInvId').val($(this).val())
+                $('#fromSchool').text(schoolName)
+                $('#transInvPart').text(partName)
+                $('#FromSchool').val(schoolName)
+                $('#PartName').val(partName)
+                $("#toSchool option:contains(" + schoolName + ")").hide()
+            })
+
+            $('#RecycledTransfer').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#qtyTransfer').attr({ 'max': recMax })
+                }
+                else {
+                    $('#qtyTransfer').attr({ 'max': max })
+                }
+            })
+
+            $('#transferInventory').on('hidden.bs.modal', function () {
+                $("#toSchool option:contains(" + putBackSchool + ")").show()
+                $('#recycledCheck').show()
+            })
+
+            $('#toSchool').change(function () {
+                $('#ToSchool').val($('#toSchool option:selected').text())
+            })
+        })
+    </script>
+}

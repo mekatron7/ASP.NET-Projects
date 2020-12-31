@@ -1,0 +1,38 @@
+﻿@model List<ChromebookManager.Models.Device>
+
+@{
+    ViewBag.Title = "Devices";
+}
+
+<h2>Devices</h2>
+<br />
+<table id="deviceTable" class="table table-hover">
+    <thead>
+        <tr>
+            <th>Barcode</th>
+            <th>Serial Number</th>
+            <th>Storage Space</th>
+            <th>Model</th>
+            <th>Current Owner</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var device in Model)
+        {
+            <tr data-toggle="tooltip" title="Added by @device.AddedBy on @device.DateAdded.ToShortDateString()" data-placement="top">
+                <td>@device.Barcode</td>
+                <td>@device.SerialNumber</td>
+                <td>@device.StorageCapacity</td>
+                <td>@device.BrandName @device.ModelNumber</td>
+                <td>@device.CurrentOwner</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $('#deviceTable').DataTable()
+    </script>
+}
+

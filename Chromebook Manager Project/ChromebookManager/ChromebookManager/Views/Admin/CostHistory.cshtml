@@ -1,0 +1,45 @@
+﻿@model List<ChromebookManager.Models.CostHistory>
+
+@if (Model.Count > 0)
+{
+    <div class="modal-header">
+        <h4 class="modal-title" id="costHistoryTitle">Cost History for @Model[0].ModelPartName</h4>
+    </div>
+    <div class="modal-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Cost</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cost in Model)
+                {
+                    <tr>
+                        <td>@string.Format("{0:c}", cost.Cost)</td>
+                        <td>@cost.StartDate.ToShortDateString()</td>
+                        @if (cost.EndDate.HasValue)
+                        {
+                            <td>@cost.EndDate.Value.ToShortDateString()</td>
+                        }
+                        else
+                        {
+                            <td>N/A</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="modal-header">
+        <h5 class="modal-title" id="editModelPartTitle">Cost History</h5>
+    </div>
+    <div class="modal-body">
+        This model part has no cost information.
+    </div>
+}

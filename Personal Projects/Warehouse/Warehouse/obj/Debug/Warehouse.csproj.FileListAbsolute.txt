@@ -40,7 +40,8 @@ C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\bi
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\bin\Microsoft.AI.Web.xml
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\bin\Dapper.xml
-C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\obj\Debug\Warehouse.csprojResolveAssemblyReference.cache
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\obj\Debug\Warehouse.csproj.CoreCompileInputs.cache
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\obj\Debug\Warehouse.dll
 C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\obj\Debug\Warehouse.pdb
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\obj\Debug\Warehouse.csprojAssemblyReference.cache
+C:\Users\Emeka\Documents\My C# Projects\Personal Projects\Warehouse\Warehouse\obj\Debug\Warehouse.csproj.CopyComplete

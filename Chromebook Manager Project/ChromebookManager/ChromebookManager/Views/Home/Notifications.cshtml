@@ -1,0 +1,67 @@
+﻿@model List<ChromebookManager.Models.Notification>
+
+@{
+    ViewBag.Title = "Notifications";
+}
+
+<h2>Notifications</h2>
+
+@if(Model.Count == 0)
+{
+    <h3 class="text-center">You have no notifications.</h3>
+}
+else
+{
+    <table class="table table-hover">
+        <tbody>
+            @foreach(var notification in Model)
+            {
+                var imgFile = "";
+                if (notification.NotifType.Contains("InvRequest"))
+                {
+                    imgFile = "icons8_request_service.ico";
+                }
+                else if(notification.NotifType.Contains("Fulfilled"))
+                {
+                    imgFile = "icons8_checked.ico";
+                }
+                else if (notification.NotifType.Contains("Declined"))
+                {
+                    imgFile = "icons8_cancel.ico";
+                }
+                else
+                {
+                    imgFile = "icons8_secured_letter_64.png";
+                }
+                <tr>
+                    <td><img src="~/Images/@imgFile" width="50" /></td>
+                    <td>@notification.NotifDate.ToShortDateString()</td>
+                    <td>@notification.NotifMessage</td>
+                    @if (notification.NotifType.Contains("InvRequest"))
+                    {
+                        if (notification.Fulfillable)
+                        {
+                            <td class="text-right">
+                                <a class="btn btn-outline-success" href="/Admin/AcceptInventoryRequest/@notification.NotificationId" onclick="return confirm('Inventory from NHLC will be transferred to the requested school. Are you sure you want to do this?');">Accept</a>
+                                <a class="btn btn-outline-danger" href="/Admin/DeclineInventoryRequest/@notification.NotificationId" onclick="return confirm('Are you sure you want to decline this request?');">Decline</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-right" data-toggle="tooltip" title="Not enough NHLC inventory to fulfill request." data-placement="top">
+                                <a class="btn btn-outline-danger" href="/Admin/DeclineInventoryRequest/@notification.NotificationId" onclick="return confirm('Are you sure you want to decline this request?');">Decline</a>
+                            </td>
+                        }
+                    }
+                    else
+                    {
+                        <td class="text-right">
+                            @Html.ActionLink("Delete", "DeleteNotification", "Home", new { id = notification.NotificationId}, new { @class = "btn btn-outline-dark", style="color:red"})
+                        </td>
+                        
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
